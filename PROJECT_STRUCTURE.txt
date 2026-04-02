@@ -1,0 +1,112 @@
+├── docs
+│   ├── CODEX_PRIMARY_PROMPT.md
+│   ├── CODEX_TASKLIST.md
+│   ├── DATA_SOURCES.md
+│   ├── FUTURE_DISTRIBUTED_STORAGE_PRINCIPLES.md
+│   ├── REFDATA_SCHEMA.md
+│   ├── STORAGE_LAYOUT.md
+│   ├── TARGET_ARCHITECTURE.md
+│   ├── Makefile
+│   ├── conf.py
+│   ├── index.rst
+│   ├── installation.rst
+│   ├── make.bat
+│   ├── readme.rst
+│   └── usage.rst
+├── py_earnings_calls
+│   ├── adapters
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── forecasts_finnhub.py
+│   │   ├── forecasts_fmp.py
+│   │   ├── transcript_bulk_utils.py
+│   │   ├── transcripts_kaggle.py
+│   │   ├── transcripts_local_tabular.py
+│   │   ├── transcripts_motley_fool_pickle.py
+│   │   └── transcripts_motley_fool.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── app.py
+│   │   ├── models.py
+│   │   └── service.py
+│   ├── pipelines
+│   │   ├── __init__.py
+│   │   ├── forecast_refresh.py
+│   │   ├── lookup_refresh.py
+│   │   ├── refdata_refresh.py
+│   │   ├── transcript_backfill.py
+│   │   ├── transcript_manifest.py
+│   │   └── transcript_import.py
+│   ├── refdata
+│   │   ├── __init__.py
+│   │   ├── builder.py
+│   │   ├── normalize.py
+│   │   ├── sec_bootstrap.py
+│   │   ├── schema.py
+│   │   └── sources.py
+│   ├── storage
+│   │   ├── __init__.py
+│   │   ├── paths.py
+│   │   └── writes.py
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── cli.py
+│   ├── config.py
+│   ├── identifiers.py
+│   ├── http.py
+│   ├── lookup.py
+│   ├── models.py
+│   ├── monitoring.py
+│   ├── rate_limit.py
+│   ├── reconciliation.py
+│   ├── runtime_output.py
+│   └── service_runtime.py
+├── refdata
+│   ├── README.md
+│   ├── inputs
+│   │   └── .gitkeep
+│   ├── sec_sources
+│   │   └── .gitkeep
+│   └── normalized
+│       └── .gitkeep
+├── requirements
+│   ├── dev.txt
+│   ├── docs.txt
+│   └── test.txt
+├── scripts
+│   ├── README.md
+│   └── bootstrap.sh
+├── tests
+│   ├── fixtures
+│   │   └── motley_fool
+│   │       ├── error_page.html
+│   │       ├── missing_body.html
+│   │       └── success_transcript.html
+│   ├── test_api_app.py
+│   ├── test_config.py
+│   ├── test_forecast_adapters.py
+│   ├── test_forecast_refresh.py
+│   ├── test_lookup.py
+│   ├── test_monitoring_reconciliation.py
+│   ├── test_refdata_refresh.py
+│   ├── test_refdata_sec_bootstrap.py
+│   ├── test_storage_paths.py
+│   ├── test_transcript_backfill.py
+│   ├── test_transcript_bulk_import.py
+│   └── test_transcript_kaggle_adapter.py
+├── .env.example
+├── .gitignore
+├── AGENTS.md
+├── CODEX_PRIMARY_PROMPT.md
+├── CODEX_TASKLIST.md
+├── DATA_SOURCES.md
+├── FUTURE_DISTRIBUTED_STORAGE_PRINCIPLES.md
+├── Makefile
+├── PROJECT_STRUCTURE.txt
+├── README.md
+├── REFDATA_SCHEMA.md
+├── STORAGE_LAYOUT.md
+├── TARGET_ARCHITECTURE.md
+├── pyproject.toml
+├── requirements.txt
+└── tox.ini

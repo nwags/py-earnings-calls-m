@@ -1,0 +1,12 @@
+beautifulsoup4
+click
+fastapi
+httpx
+lxml
+pandas
+pyarrow
+pydantic
+pytest
+python-dotenv
+requests
+uvicorn

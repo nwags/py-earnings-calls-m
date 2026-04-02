@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py-earnings-calls-m"
+version = "0.1.0"
+description = "Local-first earnings call transcript and earnings forecast ingestion toolkit."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "Nicholas Wagner" }
+]
+dependencies = [
+  "beautifulsoup4",
+  "click",
+  "fastapi",
+  "httpx",
+  "lxml",
+  "pandas",
+  "pyarrow",
+  "pydantic",
+  "python-dotenv",
+  "requests",
+  "uvicorn",
+]
+
+[project.scripts]
+py-earnings-calls = "py_earnings_calls.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["py_earnings_calls*"]
