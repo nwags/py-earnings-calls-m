@@ -16,6 +16,32 @@ pytest
 py-earnings-calls --help
 ```
 
+## Operator Output Modes
+
+Main operator commands support human output modes:
+
+- `--quiet`: minimal human summary (key status/counts only)
+- `--verbose`: bounded additive detail (truncated for large nested fields)
+
+Machine output mode:
+
+- `--summary-json` (where supported) always takes precedence over human modes
+- when `--summary-json` is present, `--quiet` / `--verbose` are ignored
+- JSON output remains script-safe and free of human commentary
+
+Runtime visibility flags (runtime-work commands):
+
+- `--log-level {debug,info,warning,error}`
+- `--log-file <path>`
+- `--progress-json` (compact NDJSON on stderr)
+- `--progress-heartbeat-seconds <float>` (idle heartbeat interval; `0` disables)
+
+Stream contract:
+
+- `--summary-json` output stays on stdout only
+- progress/runtime activity goes to stderr (and optional `--log-file`)
+- progress schema is stable: `event`, `phase`, `elapsed_seconds`, `counters`, `detail`
+
 Additional requirement groups:
 
 - `requirements/test.txt`
@@ -29,6 +55,87 @@ py-earnings-calls refdata refresh
 py-earnings-calls transcripts import-bulk --dataset ./data/motley_fool_kaggle.csv
 py-earnings-calls lookup refresh
 ```
+
+Progress examples:
+
+```bash
+py-earnings-calls lookup refresh --progress-json
+py-earnings-calls transcripts backfill --manifest ./data/motley_fool_backfill.csv --progress-json --log-file ./logs/backfill.log
+py-earnings-calls monitor loop --date 2026-03-27 --interval-seconds 30 --max-iterations 5 --progress-json --progress-heartbeat-seconds 5
+```
+
+Service runtime wrappers:
+
+```bash
+python -m py_earnings_calls.service_runtime api --summary-json
+python -m py_earnings_calls.service_runtime monitor-once --date 2026-03-27 --summary-json --progress-json
+python -m py_earnings_calls.service_runtime monitor-loop --date 2026-03-27 --interval-seconds 30 --max-iterations 5 --progress-json
+```
+
+## Optional Container Runtime Wrapper
+
+Container usage is optional. Host-native workflows remain first-class.
+
+Build image:
+
+```bash
+docker build -t py-earnings-calls-m:local .
+```
+
+Run API container (default runtime-data mounts only):
+
+```bash
+docker run --rm -p 8000:8000 \
+  -e PY_EARNINGS_CALLS_PROJECT_ROOT=/workspace \
+  -v "$(pwd)/.earnings_cache:/workspace/.earnings_cache" \
+  -v "$(pwd)/refdata:/workspace/refdata" \
+  -v "$(pwd)/data:/workspace/data" \
+  py-earnings-calls-m:local \
+  python -m py_earnings_calls.service_runtime api --host 0.0.0.0 --port 8000
+```
+
+Optional monitor runs use the same runtime surface:
+
+```bash
+docker run --rm \
+  -e PY_EARNINGS_CALLS_PROJECT_ROOT=/workspace \
+  -v "$(pwd)/.earnings_cache:/workspace/.earnings_cache" \
+  -v "$(pwd)/refdata:/workspace/refdata" \
+  -v "$(pwd)/data:/workspace/data" \
+  py-earnings-calls-m:local \
+  python -m py_earnings_calls.service_runtime monitor-once --date 2026-03-27 --summary-json --progress-json
+
+docker run --rm \
+  -e PY_EARNINGS_CALLS_PROJECT_ROOT=/workspace \
+  -v "$(pwd)/.earnings_cache:/workspace/.earnings_cache" \
+  -v "$(pwd)/refdata:/workspace/refdata" \
+  -v "$(pwd)/data:/workspace/data" \
+  py-earnings-calls-m:local \
+  python -m py_earnings_calls.service_runtime monitor-loop --date 2026-03-27 --interval-seconds 30 --max-iterations 5 --progress-json
+```
+
+Optional compose wrapper:
+
+```bash
+docker compose up api
+```
+
+Compose reads environment variables from the shell. A `.env` file is optional and can be used for convenience, but it is not required.
+
+Dev-only editable source mount (optional, not default):
+
+```bash
+docker run --rm -p 8000:8000 \
+  -e PY_EARNINGS_CALLS_PROJECT_ROOT=/workspace \
+  -v "$(pwd):/app" \
+  -v "$(pwd)/.earnings_cache:/workspace/.earnings_cache" \
+  -v "$(pwd)/refdata:/workspace/refdata" \
+  -v "$(pwd)/data:/workspace/data" \
+  py-earnings-calls-m:local \
+  python -m py_earnings_calls.service_runtime api --host 0.0.0.0 --port 8000
+```
+
+Migration note: this container wrapper pass is additive only. No storage/schema/runtime-output contract changes are required for existing host-native workflows.
 
 ## Issuer Refdata (Ticker/CIK)
 

@@ -11,8 +11,9 @@ __pycache__
 htmlcov
 .coverage
 coverage_*
+.earnings_cache
+data
 refdata
 logs
 snapshot_v*.md
 export.md
-

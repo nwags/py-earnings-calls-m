@@ -13,3 +13,6 @@ Canonical architecture and ingestion contracts live in:
 This Sphinx tree documents the local-first earnings-calls MVP: transcript
 history import, transcript backfill/query workflows, and forecast snapshot
 refresh pipelines.
+
+Container/runtime wrapper notes are optional operator ergonomics and do not
+replace host-native workflows.

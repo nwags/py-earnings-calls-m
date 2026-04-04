@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
 import time
+from typing import Callable
 
 import pandas as pd
 
@@ -358,6 +359,8 @@ def run_monitor_loop(
     provider_mode: str = "fallback",
     provider: str = "finnhub",
     provider_priority: list[str] | None = None,
+    iteration_progress_callback: Callable[[str, dict[str, object]], None] | None = None,
+    heartbeat_callback: Callable[[], None] | None = None,
 ) -> dict[str, object]:
     iterations_run = 0
     total_targets = 0
@@ -368,6 +371,14 @@ def run_monitor_loop(
     artifacts_written: set[str] = set()
 
     for index in range(max_iterations):
+        if iteration_progress_callback is not None:
+            iteration_progress_callback(
+                "iteration_start",
+                {
+                    "iteration": index + 1,
+                    "max_iterations": max_iterations,
+                },
+            )
         poll = run_monitor_poll(
             config,
             target_date=target_date,
@@ -385,8 +396,29 @@ def run_monitor_loop(
         total_failures += int(poll["failures"])
         lookup_updates.extend(list(poll.get("lookup_updates", [])))
         artifacts_written.update(list(poll.get("artifacts_written", [])))
+        if iteration_progress_callback is not None:
+            iteration_progress_callback(
+                "iteration_end",
+                {
+                    "iteration": index + 1,
+                    "max_iterations": max_iterations,
+                    "targets_considered": int(poll["targets_considered"]),
+                    "actions_taken": int(poll["actions_taken"]),
+                    "skipped": int(poll["skipped"]),
+                    "failures": int(poll["failures"]),
+                },
+            )
         if index < max_iterations - 1 and interval_seconds > 0:
-            time.sleep(interval_seconds)
+            if heartbeat_callback is None:
+                time.sleep(interval_seconds)
+            else:
+                end = time.monotonic() + interval_seconds
+                while True:
+                    remaining = end - time.monotonic()
+                    if remaining <= 0:
+                        break
+                    time.sleep(min(0.25, remaining))
+                    heartbeat_callback()
 
     return {
         "mode": "loop",

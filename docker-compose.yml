@@ -1,0 +1,21 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "py_earnings_calls.service_runtime", "api", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    environment:
+      PY_EARNINGS_CALLS_PROJECT_ROOT: /workspace
+      PY_EARNINGS_CALLS_USER_AGENT: ${PY_EARNINGS_CALLS_USER_AGENT:-}
+      PY_EARNINGS_CALLS_MAX_REQUESTS_PER_SECOND: ${PY_EARNINGS_CALLS_MAX_REQUESTS_PER_SECOND:-}
+      PY_EARNINGS_CALLS_DOWNLOAD_WORKERS: ${PY_EARNINGS_CALLS_DOWNLOAD_WORKERS:-}
+      PY_EARNINGS_CALLS_HTTP_CONNECT_TIMEOUT: ${PY_EARNINGS_CALLS_HTTP_CONNECT_TIMEOUT:-}
+      PY_EARNINGS_CALLS_HTTP_READ_TIMEOUT: ${PY_EARNINGS_CALLS_HTTP_READ_TIMEOUT:-}
+      FINNHUB_API_KEY: ${FINNHUB_API_KEY:-}
+      FMP_API_KEY: ${FMP_API_KEY:-}
+    volumes:
+      - ./.earnings_cache:/workspace/.earnings_cache
+      - ./refdata:/workspace/refdata
+      - ./data:/workspace/data

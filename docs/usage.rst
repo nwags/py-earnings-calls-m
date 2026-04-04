@@ -7,6 +7,30 @@ CLI help:
 
    py-earnings-calls --help
 
+Output mode notes:
+
+- ``--quiet``: minimal human-readable summary
+- ``--verbose``: bounded additive detail
+- ``--summary-json`` (where available): machine output mode that takes precedence over ``--quiet`` / ``--verbose``
+
+Runtime visibility notes (runtime-work commands):
+
+- ``--log-level {debug,info,warning,error}``
+- ``--log-file <path>``
+- ``--progress-json``: compact NDJSON progress events on ``stderr``
+- ``--progress-heartbeat-seconds FLOAT``: idle heartbeat interval; ``0`` disables
+
+Stdout/stderr contract:
+
+- ``--summary-json`` remains machine-clean on ``stdout``
+- progress/runtime activity goes to ``stderr`` (and optional ``--log-file``)
+- progress event schema is stable:
+  - ``event``
+  - ``phase``
+  - ``elapsed_seconds``
+  - ``counters``
+  - ``detail``
+
 Common bootstrap commands:
 
 .. code-block:: bash
@@ -14,6 +38,76 @@ Common bootstrap commands:
    py-earnings-calls refdata refresh
    py-earnings-calls transcripts import-bulk --dataset ./data/motley_fool_kaggle.csv
    py-earnings-calls lookup refresh
+
+Output mode examples:
+
+.. code-block:: bash
+
+   py-earnings-calls lookup refresh --quiet
+   py-earnings-calls lookup refresh --verbose
+   py-earnings-calls storage verify-layout --summary-json --quiet
+
+Service runtime wrapper:
+
+.. code-block:: bash
+
+   python -m py_earnings_calls.service_runtime api --host 127.0.0.1 --port 8000
+   python -m py_earnings_calls.service_runtime api --summary-json
+   python -m py_earnings_calls.service_runtime monitor-once --date 2026-03-27 --summary-json --progress-json
+   python -m py_earnings_calls.service_runtime monitor-loop --date 2026-03-27 --interval-seconds 30 --max-iterations 5 --progress-json
+
+Optional container wrapper (host-native remains first-class):
+
+.. code-block:: bash
+
+   docker build -t py-earnings-calls-m:local .
+
+   docker run --rm -p 8000:8000 \
+     -e PY_EARNINGS_CALLS_PROJECT_ROOT=/workspace \
+     -v "$(pwd)/.earnings_cache:/workspace/.earnings_cache" \
+     -v "$(pwd)/refdata:/workspace/refdata" \
+     -v "$(pwd)/data:/workspace/data" \
+     py-earnings-calls-m:local \
+     python -m py_earnings_calls.service_runtime api --host 0.0.0.0 --port 8000
+
+   docker compose up api
+
+   # Optional monitor workflows through the same runtime surface
+   docker run --rm \
+     -e PY_EARNINGS_CALLS_PROJECT_ROOT=/workspace \
+     -v "$(pwd)/.earnings_cache:/workspace/.earnings_cache" \
+     -v "$(pwd)/refdata:/workspace/refdata" \
+     -v "$(pwd)/data:/workspace/data" \
+     py-earnings-calls-m:local \
+     python -m py_earnings_calls.service_runtime monitor-once --date 2026-03-27 --summary-json --progress-json
+
+   docker run --rm \
+     -e PY_EARNINGS_CALLS_PROJECT_ROOT=/workspace \
+     -v "$(pwd)/.earnings_cache:/workspace/.earnings_cache" \
+     -v "$(pwd)/refdata:/workspace/refdata" \
+     -v "$(pwd)/data:/workspace/data" \
+     py-earnings-calls-m:local \
+     python -m py_earnings_calls.service_runtime monitor-loop --date 2026-03-27 --interval-seconds 30 --max-iterations 5 --progress-json
+
+Container env note:
+
+- ``docker-compose.yml`` uses shell environment passthrough, so a local ``.env`` file is optional.
+- Keep secrets external (for example, export ``FINNHUB_API_KEY`` / ``FMP_API_KEY`` in your shell).
+- Default mounts are runtime-data-only: ``.earnings_cache/``, ``refdata/``, and ``data/``.
+- Migration note: this is an additive optional wrapper; existing host-native runtime contracts are unchanged.
+
+Dev-only editable source mount (optional, not default):
+
+.. code-block:: bash
+
+   docker run --rm -p 8000:8000 \
+     -e PY_EARNINGS_CALLS_PROJECT_ROOT=/workspace \
+     -v "$(pwd):/app" \
+     -v "$(pwd)/.earnings_cache:/workspace/.earnings_cache" \
+     -v "$(pwd)/refdata:/workspace/refdata" \
+     -v "$(pwd)/data:/workspace/data" \
+     py-earnings-calls-m:local \
+     python -m py_earnings_calls.service_runtime api --host 0.0.0.0 --port 8000
 
 Issuer refdata refresh examples:
 
@@ -142,6 +236,7 @@ Monitor examples:
    py-earnings-calls monitor poll --date 2026-03-27
    py-earnings-calls monitor poll --date 2026-03-27 --warm
    py-earnings-calls monitor loop --date 2026-03-27 --interval-seconds 30 --max-iterations 5 --warm
+   py-earnings-calls monitor poll --date 2026-03-27 --summary-json --progress-json
 
 Reconciliation examples:
 
