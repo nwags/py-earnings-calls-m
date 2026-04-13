@@ -62,6 +62,29 @@ def test_cli_summary_json_and_progress_route_to_separate_streams(monkeypatch):
         assert sorted(payload.keys()) == ["counters", "detail", "elapsed_seconds", "event", "phase"]
 
 
+def test_legacy_cli_summary_json_default_shape_is_preserved(monkeypatch):
+    runner = CliRunner()
+    monkeypatch.setattr(
+        cli,
+        "run_monitor_poll",
+        lambda config, target_date, warm, symbols, max_symbols: {
+            "mode": "poll",
+            "iterations": 1,
+            "targets_considered": 2,
+            "actions_taken": 1,
+            "skipped": 1,
+            "failures": 0,
+            "lookup_updates": [],
+            "artifacts_written": ["/tmp/a"],
+        },
+    )
+    result = runner.invoke(cli.main, ["monitor", "poll", "--date", "2026-03-27", "--summary-json"])
+    assert result.exit_code == 0, result.output
+    payload = json.loads(result.output.strip())
+    assert payload["mode"] == "poll"
+    assert "domain" not in payload
+
+
 def test_progress_json_can_be_written_to_log_file(monkeypatch, tmp_path):
     runner = CliRunner()
     log_path = tmp_path / "runtime.log"

@@ -1,0 +1,7 @@
+{
+  "repo": "py-sec-edgar-m",
+  "local_shim_module": "py_sec_edgar.wave4_shared",
+  "target_external_import": "m_cache_shared.augmentation",
+  "keep_local_wrapper": true,
+  "notes": "Keep local facade to preserve no-dual-authority posture during early adoption."
+}

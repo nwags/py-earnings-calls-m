@@ -1,0 +1,6 @@
+{
+  "repo": "py-news-m",
+  "requires_wave7_1_completion": true,
+  "requires_shared_rc_validation": true,
+  "key_start_gate_note": "Begin comprehensive user testing only after one shared RC execution path and evidence bundle are operational."
+}

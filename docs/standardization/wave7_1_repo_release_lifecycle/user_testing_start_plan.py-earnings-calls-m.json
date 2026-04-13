@@ -1,0 +1,6 @@
+{
+  "repo": "py-earnings-calls-m",
+  "requires_wave7_1_completion": true,
+  "requires_shared_rc_validation": true,
+  "key_start_gate_note": "Start comprehensive cross-application user testing only after Wave 7.1 implementation, one shared RC fully validated across all repos, evidence/signoff flow operational end-to-end, rollback verified, and no open blocking lifecycle incident."
+}

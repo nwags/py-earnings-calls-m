@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/rc-workflow-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "facade_module",
+    "rc_validation_role",
+    "full_test_command"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "facade_module": {
+      "type": "string"
+    },
+    "rc_validation_role": {
+      "type": "string"
+    },
+    "full_test_command": {
+      "type": "string"
+    },
+    "evidence_artifact": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

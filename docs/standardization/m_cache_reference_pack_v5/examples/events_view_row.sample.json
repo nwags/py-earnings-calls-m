@@ -1,0 +1,11 @@
+{
+  "event_at": "2026-04-08T17:04:00Z",
+  "event_code": "artifact_persisted",
+  "canonical_key": "transcript:654f620f8cbe091c",
+  "augmentation_type": "temporal_expression_tagging",
+  "run_id": "aug-run-1002",
+  "producer_name": "timex-tagger-y",
+  "producer_version": "0.9.1",
+  "reason_code": "completed",
+  "success": true
+}

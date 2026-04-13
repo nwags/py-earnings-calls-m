@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/producer-run-submission.schema.json",
+  "type": "object",
+  "required": [
+    "run_id",
+    "domain",
+    "resource_family",
+    "canonical_key",
+    "augmentation_type",
+    "source_text_version",
+    "producer_kind",
+    "producer_name",
+    "producer_version",
+    "payload_schema_name",
+    "payload_schema_version",
+    "status",
+    "success",
+    "reason_code"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "resource_family": {
+      "type": "string"
+    },
+    "canonical_key": {
+      "type": "string"
+    },
+    "augmentation_type": {
+      "enum": [
+        "entity_tagging",
+        "temporal_expression_tagging"
+      ]
+    },
+    "source_text_version": {
+      "type": "string"
+    },
+    "producer_kind": {
+      "enum": [
+        "llm",
+        "rules",
+        "hybrid",
+        "manual"
+      ]
+    },
+    "producer_name": {
+      "type": "string"
+    },
+    "producer_version": {
+      "type": "string"
+    },
+    "payload_schema_name": {
+      "type": "string"
+    },
+    "payload_schema_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "completed",
+        "failed",
+        "deferred",
+        "skipped"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "persisted_locally": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

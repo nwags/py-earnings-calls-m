@@ -2,9 +2,16 @@ from __future__ import annotations
 
 from datetime import date
 from pathlib import Path
+from hashlib import sha256
 
 import pandas as pd
 
+from py_earnings_calls.augmentation import transcript_augmentation_meta
+from py_earnings_calls.augmentation import (
+    submit_producer_artifact,
+    submit_producer_run,
+    transcript_target_descriptor,
+)
 from py_earnings_calls.config import AppConfig
 from py_earnings_calls.identifiers import normalize_cik
 from py_earnings_calls.lookup import (
@@ -31,6 +38,15 @@ class LocalLookupService:
             return None
         return _sanitize_transcript_payload(matches.iloc[0].to_dict())
 
+    def get_transcript_target_descriptor(self, call_id: str) -> dict[str, object]:
+        return transcript_target_descriptor(self._config, call_id=call_id)
+
+    def submit_augmentation_run(self, payload: dict[str, object]) -> dict[str, object]:
+        return submit_producer_run(self._config, payload)
+
+    def submit_augmentation_artifact(self, payload: dict[str, object]) -> dict[str, object]:
+        return submit_producer_artifact(self._config, payload)
+
     def get_transcript_metadata_with_resolution(
         self,
         call_id: str,
@@ -39,25 +55,47 @@ class LocalLookupService:
     ) -> tuple[dict | None, dict[str, object]]:
         metadata = self.get_transcript_metadata(call_id)
         if metadata is not None:
+            source_text_version = _source_text_version_from_metadata(metadata)
             return metadata, {
                 "served_from": "local_hit",
                 "resolution_mode": resolution_mode.value,
+                "remote_attempted": False,
+                "provider_requested": metadata.get("provider"),
                 "provider_used": metadata.get("provider"),
                 "method_used": "local_lookup",
                 "success": True,
                 "reason_code": "LOCAL_HIT",
                 "persisted_locally": False,
+                "rate_limited": False,
+                "retry_count": 0,
+                "deferred_until": None,
+                "augmentation_meta": transcript_augmentation_meta(
+                    self._config,
+                    call_id=call_id,
+                    source_text_version=source_text_version,
+                ),
             }
         result = self._resolver.resolve_transcript_if_missing(call_id=call_id, resolution_mode=resolution_mode)
         metadata = self.get_transcript_metadata(call_id)
+        source_text_version = _source_text_version_from_metadata(metadata) if metadata is not None else None
         return metadata, {
             "served_from": result.served_from,
             "resolution_mode": result.resolution_mode,
+            "remote_attempted": resolution_mode != ResolutionMode.LOCAL_ONLY,
+            "provider_requested": result.provider_requested,
             "provider_used": result.provider_used,
             "method_used": result.method_used,
             "success": result.success,
             "reason_code": result.reason_code,
             "persisted_locally": result.persisted_locally,
+            "rate_limited": result.rate_limited,
+            "retry_count": result.retry_count,
+            "deferred_until": result.deferred_until,
+            "augmentation_meta": transcript_augmentation_meta(
+                self._config,
+                call_id=call_id,
+                source_text_version=source_text_version,
+            ),
         }
 
     def list_transcripts(
@@ -139,25 +177,47 @@ class LocalLookupService:
     ) -> tuple[str | None, dict[str, object]]:
         content = self.get_transcript_content(call_id)
         if content is not None:
+            source_text_version = f"sha256:{sha256(content.encode('utf-8')).hexdigest()}"
             return content, {
                 "served_from": "local_hit",
                 "resolution_mode": resolution_mode.value,
+                "remote_attempted": False,
+                "provider_requested": None,
                 "provider_used": None,
                 "method_used": "local_file",
                 "success": True,
                 "reason_code": "LOCAL_HIT",
                 "persisted_locally": False,
+                "rate_limited": False,
+                "retry_count": 0,
+                "deferred_until": None,
+                "augmentation_meta": transcript_augmentation_meta(
+                    self._config,
+                    call_id=call_id,
+                    source_text_version=source_text_version,
+                ),
             }
         result = self._resolver.resolve_transcript_if_missing(call_id=call_id, resolution_mode=resolution_mode)
         content = self.get_transcript_content(call_id)
+        source_text_version = f"sha256:{sha256(content.encode('utf-8')).hexdigest()}" if content is not None else None
         return content, {
             "served_from": result.served_from,
             "resolution_mode": result.resolution_mode,
+            "remote_attempted": resolution_mode != ResolutionMode.LOCAL_ONLY,
+            "provider_requested": result.provider_requested,
             "provider_used": result.provider_used,
             "method_used": result.method_used,
             "success": result.success and content is not None,
             "reason_code": result.reason_code,
             "persisted_locally": result.persisted_locally,
+            "rate_limited": result.rate_limited,
+            "retry_count": result.retry_count,
+            "deferred_until": result.deferred_until,
+            "augmentation_meta": transcript_augmentation_meta(
+                self._config,
+                call_id=call_id,
+                source_text_version=source_text_version,
+            ),
         }
 
     def get_latest_forecast(self, symbol: str) -> dict | None:
@@ -221,11 +281,16 @@ class LocalLookupService:
             return payload, {
                 "served_from": "local_hit",
                 "resolution_mode": resolution_mode.value,
+                "remote_attempted": False,
+                "provider_requested": provider.lower(),
                 "provider_used": provider.lower(),
                 "method_used": "local_parquet",
                 "success": True,
                 "reason_code": "LOCAL_HIT",
                 "persisted_locally": False,
+                "rate_limited": False,
+                "retry_count": 0,
+                "deferred_until": None,
             }
 
         result = self._resolver.resolve_forecast_snapshot_if_missing(
@@ -238,11 +303,16 @@ class LocalLookupService:
         return payload, {
             "served_from": result.served_from,
             "resolution_mode": result.resolution_mode,
+            "remote_attempted": resolution_mode != ResolutionMode.LOCAL_ONLY,
+            "provider_requested": result.provider_requested,
             "provider_used": result.provider_used,
             "method_used": result.method_used,
             "success": result.success and payload is not None,
             "reason_code": result.reason_code,
             "persisted_locally": result.persisted_locally,
+            "rate_limited": result.rate_limited,
+            "retry_count": result.retry_count,
+            "deferred_until": result.deferred_until,
         }
 
     def _local_forecast_snapshot(self, *, provider: str, symbol: str, as_of_date: date) -> dict | None:
@@ -279,3 +349,15 @@ def _sanitize_transcript_payload(payload: dict) -> dict:
         else:
             sanitized[key] = value
     return sanitized
+
+
+def _source_text_version_from_metadata(metadata: dict | None) -> str | None:
+    if metadata is None:
+        return None
+    transcript_path = metadata.get("transcript_path")
+    if transcript_path is None:
+        return None
+    path = Path(str(transcript_path))
+    if not path.exists() or not path.is_file():
+        return None
+    return f"sha256:{sha256(path.read_bytes()).hexdigest()}"

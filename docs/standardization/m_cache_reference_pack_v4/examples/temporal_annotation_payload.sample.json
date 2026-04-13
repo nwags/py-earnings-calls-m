@@ -1,0 +1,13 @@
+{
+  "span_start": 120,
+  "span_end": 132,
+  "text": "next quarter",
+  "timex_type": "DURATION",
+  "normalized_value": "P3M",
+  "document_time_reference": "2026-03-18T00:00:00Z",
+  "anchor_time": "2026-03-18",
+  "confidence": 0.87,
+  "attributes": {
+    "source": "producer-example"
+  }
+}

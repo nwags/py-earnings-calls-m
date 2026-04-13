@@ -1,0 +1,10 @@
+{
+  "module_path": "m_cache_shared.augmentation.packers",
+  "symbol_name": "pack_run_status_view",
+  "category": "packer",
+  "canonical_name": "pack_run_status_view",
+  "compatibility_aliases": [
+    "build_run_status_view",
+    "pack_run_status_items"
+  ]
+}

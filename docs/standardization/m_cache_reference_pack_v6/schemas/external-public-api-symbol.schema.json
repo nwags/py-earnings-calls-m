@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/external-public-api-symbol.schema.json",
+  "type": "object",
+  "required": [
+    "module_path",
+    "symbol_name",
+    "category",
+    "included_in_v1",
+    "reason"
+  ],
+  "properties": {
+    "module_path": {
+      "type": "string"
+    },
+    "symbol_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "included_in_v1": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

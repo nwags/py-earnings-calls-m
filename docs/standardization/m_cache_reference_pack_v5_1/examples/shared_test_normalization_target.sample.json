@@ -1,0 +1,6 @@
+{
+  "repo": "py-fed-m",
+  "current_test_module": "tests/test_wave5_contracts.py",
+  "target_test_module": "tests/test_m_cache_shared.py",
+  "notes": "Keep extra contract coverage if needed, but align obvious shared-package test naming."
+}

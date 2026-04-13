@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/reconciliation-event.schema.json",
+  "type": "object",
+  "required": [
+    "event_at",
+    "domain",
+    "event_code",
+    "discrepancy_count",
+    "catch_up_warm"
+  ],
+  "properties": {
+    "event_at": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "event_code": {
+      "type": "string"
+    },
+    "target_date": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "discrepancy_count": {
+      "type": "integer"
+    },
+    "catch_up_warm": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

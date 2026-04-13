@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/events-view-row.schema.json",
+  "type": "object",
+  "required": [
+    "event_at",
+    "event_code",
+    "canonical_key"
+  ],
+  "properties": {
+    "event_at": {
+      "type": "string"
+    },
+    "event_code": {
+      "type": "string"
+    },
+    "canonical_key": {
+      "type": "string"
+    },
+    "augmentation_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "producer_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "producer_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "success": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

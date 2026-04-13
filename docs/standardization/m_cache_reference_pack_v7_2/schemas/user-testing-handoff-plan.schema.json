@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/user-testing-handoff-plan.schema.json",
+  "type": "object",
+  "required": [
+    "requires_wave7_2_completion",
+    "requires_real_shared_rc_cycle",
+    "requires_evidence_bundle_operational"
+  ],
+  "properties": {
+    "requires_wave7_2_completion": {
+      "type": "boolean"
+    },
+    "requires_real_shared_rc_cycle": {
+      "type": "boolean"
+    },
+    "requires_evidence_bundle_operational": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

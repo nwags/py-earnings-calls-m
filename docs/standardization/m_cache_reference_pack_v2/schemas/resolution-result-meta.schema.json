@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/resolution-result-meta.schema.json",
+  "type": "object",
+  "required": [
+    "resolution_mode",
+    "served_from",
+    "remote_attempted",
+    "success",
+    "reason_code"
+  ],
+  "properties": {
+    "resolution_mode": {
+      "type": "string"
+    },
+    "provider_requested": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider_used": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "served_from": {
+      "type": "string"
+    },
+    "remote_attempted": {
+      "type": "boolean"
+    },
+    "persisted_locally": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "rate_limited": {
+      "type": "boolean"
+    },
+    "retry_count": {
+      "type": "integer"
+    },
+    "deferred_until": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

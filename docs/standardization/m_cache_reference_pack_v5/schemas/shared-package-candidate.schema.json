@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/shared-package-candidate.schema.json",
+  "type": "object",
+  "required": [
+    "module_name",
+    "symbol_name",
+    "category",
+    "rationale",
+    "safe_to_extract_now"
+  ],
+  "properties": {
+    "module_name": {
+      "type": "string"
+    },
+    "symbol_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "safe_to_extract_now": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

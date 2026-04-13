@@ -1,0 +1,15 @@
+{
+  "run_id": "aug-run-1001",
+  "idempotency_key": "entity-tagger-x:1.2.0:sha256:abcd",
+  "augmentation_type": "entity_tagging",
+  "canonical_key": "article:nyt://article/11111111-1111-1111-1111-111111111111",
+  "source_text_version": "sha256:abcd",
+  "producer_name": "entity-tagger-x",
+  "producer_version": "1.2.0",
+  "status": "completed",
+  "success": true,
+  "reason_code": "completed",
+  "persisted_locally": true,
+  "augmentation_stale": false,
+  "last_updated_at": "2026-04-08T17:04:00Z"
+}

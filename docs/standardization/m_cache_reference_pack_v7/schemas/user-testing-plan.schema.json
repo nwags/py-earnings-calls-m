@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/user-testing-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "user_testing_required",
+    "key_user_flows"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "user_testing_required": {
+      "type": "boolean"
+    },
+    "key_user_flows": {
+      "type": "string"
+    },
+    "release_gate_notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

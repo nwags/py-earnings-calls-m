@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/provider-usage-event.schema.json",
+  "type": "object",
+  "required": [
+    "event_at",
+    "domain",
+    "command_path",
+    "content_domain",
+    "selection_outcome",
+    "reason_code",
+    "remote_attempted",
+    "rate_limited",
+    "retry_count",
+    "deferred"
+  ],
+  "properties": {
+    "event_at": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "command_path": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "content_domain": {
+      "type": "string"
+    },
+    "selection_outcome": {
+      "type": "string"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "remote_attempted": {
+      "type": "boolean"
+    },
+    "rate_limited": {
+      "type": "boolean"
+    },
+    "retry_count": {
+      "type": "integer"
+    },
+    "deferred": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

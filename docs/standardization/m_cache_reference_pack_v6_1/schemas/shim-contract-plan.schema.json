@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/shim-contract-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "facade_module",
+    "source_mode_env_var",
+    "external_root_env_var",
+    "default_external_root",
+    "fallback_behavior"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "facade_module": {
+      "type": "string"
+    },
+    "source_mode_env_var": {
+      "type": "string"
+    },
+    "external_root_env_var": {
+      "type": "string"
+    },
+    "default_external_root": {
+      "type": "string"
+    },
+    "fallback_behavior": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

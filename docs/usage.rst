@@ -1,6 +1,12 @@
 Usage
 =====
 
+Wave 1 migration note:
+
+- ``docs/WAVE1_MIGRATION_NOTE.md``
+- ``docs/WAVE2_MIGRATION_NOTE.md``
+- ``docs/WAVE3_MIGRATION_NOTE.md``
+
 CLI help:
 
 .. code-block:: bash
@@ -209,6 +215,17 @@ Operator resolution examples:
 
    py-earnings-calls resolve transcript --call-id c1 --resolution-mode resolve_if_missing
    py-earnings-calls resolve forecast-snapshot --provider finnhub --symbol AAPL --date 2026-03-26 --resolution-mode resolve_if_missing
+   m-cache earnings providers list --summary-json
+   m-cache earnings providers show --provider finnhub --summary-json
+   m-cache earnings resolve transcript --call-id c1 --resolution-mode resolve_if_missing --summary-json
+   m-cache earnings resolve forecast-snapshot --provider finnhub --symbol AAPL --date 2026-03-26 --resolution-mode resolve_if_missing --summary-json
+   m-cache earnings aug list-types --summary-json
+   m-cache earnings aug inspect-target --resource-family transcripts --call-id c1 --summary-json
+   m-cache earnings aug inspect-runs --resource-family transcripts --call-id c1 --summary-json
+   m-cache earnings aug inspect-artifacts --resource-family transcripts --call-id c1 --summary-json
+   m-cache earnings aug target-descriptor --call-id c1 --summary-json
+   m-cache earnings aug submit-run --input-json ./producer_run_submission.json --summary-json
+   m-cache earnings aug submit-artifact --input-json ./producer_artifact_submission.json --summary-json
 
 Storage layout migration and verification:
 

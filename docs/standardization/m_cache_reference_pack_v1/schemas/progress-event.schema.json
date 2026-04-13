@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/progress-event.schema.json",
+  "type": "object",
+  "required": [
+    "event",
+    "domain",
+    "command_path",
+    "phase",
+    "elapsed_seconds",
+    "counters"
+  ],
+  "properties": {
+    "event": {
+      "enum": [
+        "started",
+        "progress",
+        "heartbeat",
+        "warning",
+        "completed",
+        "failed",
+        "interrupted",
+        "deferred"
+      ]
+    },
+    "domain": {
+      "type": "string"
+    },
+    "command_path": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "phase": {
+      "type": "string"
+    },
+    "elapsed_seconds": {
+      "type": "number"
+    },
+    "counters": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

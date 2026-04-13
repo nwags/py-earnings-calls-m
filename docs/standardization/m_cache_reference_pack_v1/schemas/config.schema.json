@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/config.schema.json",
+  "type": "object",
+  "required": [
+    "global",
+    "domains"
+  ],
+  "properties": {
+    "global": {
+      "type": "object",
+      "required": [
+        "app_root",
+        "log_level",
+        "default_summary_json",
+        "default_progress_json"
+      ],
+      "properties": {
+        "app_root": {
+          "type": "string"
+        },
+        "log_level": {
+          "type": "string"
+        },
+        "default_summary_json": {
+          "type": "boolean"
+        },
+        "default_progress_json": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "domains": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9_\\-]*$": {
+          "type": "object",
+          "required": [
+            "enabled",
+            "cache_root",
+            "normalized_refdata_root",
+            "lookup_root",
+            "default_resolution_mode"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "cache_root": {
+              "type": "string"
+            },
+            "normalized_refdata_root": {
+              "type": "string"
+            },
+            "lookup_root": {
+              "type": "string"
+            },
+            "default_resolution_mode": {
+              "enum": [
+                "local_only",
+                "resolve_if_missing",
+                "refresh_if_stale"
+              ]
+            },
+            "providers": {
+              "type": "object"
+            },
+            "runtime": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

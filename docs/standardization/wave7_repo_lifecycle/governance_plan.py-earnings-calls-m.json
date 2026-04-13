@@ -1,0 +1,6 @@
+{
+  "repo": "py-earnings-calls-m",
+  "external_repo_name": "m-cache-shared-ext",
+  "public_api_policy": "This repo consumes and validates only the strict-common v1 public API surface and does not broaden shared public API scope in Wave 7.",
+  "required_release_artifacts": "For repo signoff: pinned tag reference, changelog/public API compatibility notes from external release, rollback notes, and repo RC/stable validation evidence."
+}

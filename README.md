@@ -14,6 +14,7 @@ pip install -r requirements.txt
 pip install -e .
 pytest
 py-earnings-calls --help
+m-cache --help
 ```
 
 ## Operator Output Modes
@@ -42,6 +43,12 @@ Stream contract:
 - progress/runtime activity goes to stderr (and optional `--log-file`)
 - progress schema is stable: `event`, `phase`, `elapsed_seconds`, `counters`, `detail`
 
+Wave 1 output-shape strategy:
+
+- legacy CLI (`py-earnings-calls ...`) keeps legacy JSON/progress payload shapes by default
+- canonical CLI (`m-cache earnings ...`) uses canonical Wave 1 summary/progress shapes by default
+- `m-cache earnings ...` supports `--output-schema legacy|canonical` for explicit selection
+
 Additional requirement groups:
 
 - `requirements/test.txt`
@@ -54,6 +61,25 @@ Additional requirement groups:
 py-earnings-calls refdata refresh
 py-earnings-calls transcripts import-bulk --dataset ./data/motley_fool_kaggle.csv
 py-earnings-calls lookup refresh
+```
+
+Canonical Wave 1 command surface (additive):
+
+```bash
+m-cache earnings refdata refresh
+m-cache earnings transcripts import-bulk --dataset ./data/motley_fool_kaggle.csv
+m-cache earnings forecasts refresh-daily --provider finnhub --date 2026-03-27 --symbol AAPL
+m-cache earnings providers list --summary-json
+m-cache earnings providers show --provider finnhub --summary-json
+m-cache earnings resolve transcript --call-id c1 --resolution-mode resolve_if_missing --summary-json
+m-cache earnings aug list-types --summary-json
+m-cache earnings aug inspect-target --resource-family transcripts --call-id c1 --summary-json
+m-cache earnings aug submit-run --input-json ./producer_run_submission.json --summary-json
+m-cache earnings aug submit-artifact --input-json ./producer_artifact_submission.json --summary-json
+m-cache earnings aug status --run-id aug-run-1001 --summary-json
+m-cache earnings aug events --resource-family transcripts --limit 20 --summary-json
+# compatibility alias:
+m-cache earnings aug target-descriptor --call-id c1 --summary-json
 ```
 
 Progress examples:
@@ -299,6 +325,10 @@ Core architecture and storage docs live under `docs/`:
 - `docs/REFDATA_SCHEMA.md`
 - `docs/DATA_SOURCES.md`
 - `docs/FUTURE_DISTRIBUTED_STORAGE_PRINCIPLES.md`
+- `docs/WAVE1_MIGRATION_NOTE.md`
+- `docs/WAVE2_MIGRATION_NOTE.md`
+- `docs/WAVE3_MIGRATION_NOTE.md`
+- `docs/WAVE4_MIGRATION_NOTE.md`
 
 ## Forecast Refresh Modes
 
@@ -349,6 +379,7 @@ Stable provenance/events artifact:
 
 - `refdata/normalized/resolution_events.parquet`
 - fields:
+  - `domain` (`earnings`)
   - `event_at`
   - `content_domain`
   - `canonical_key`
@@ -357,6 +388,7 @@ Stable provenance/events artifact:
   - `provider_used`
   - `method_used`
   - `served_from`
+  - `remote_attempted`
   - `success`
   - `reason_code`
   - `message`
@@ -511,6 +543,27 @@ This repository is ingestion-first, local-first, and intended to produce determi
 
 ## Migration Note
 
+Wave 1 canonical now:
+
+- `m-cache earnings ...` canonical command surface (additive)
+- canonical `m-cache.toml` loader (`--config`, `M_CACHE_CONFIG`, `./m-cache.toml`, then compatibility env/defaults)
+- expanded canonical provider registry fields in `refdata/normalized/provider_registry.parquet`
+- additive canonical fields in persisted resolution/reconciliation event artifacts
+- canonical summary/progress JSON shape on `m-cache earnings ...` by default
+
+Aliased/compatibility surfaces kept:
+
+- `py-earnings-calls ...` remains supported for operators
+- legacy summary/progress JSON payload shapes remain default on `py-earnings-calls ...`
+- `m-cache earnings ... --output-schema legacy` is available for compatibility scripts
+
+Reserved for later waves:
+
+- cross-repo shared package extraction
+- deep pipeline rewrites for command unification
+- broad historical event-row migrations
+- any transcript/forecast identity flattening
+
 - `refdata refresh` now writes both:
   - `refdata/normalized/issuers.parquet`
   - `refdata/normalized/provider_registry.parquet`
@@ -518,3 +571,160 @@ This repository is ingestion-first, local-first, and intended to produce determi
   - `refdata/normalized/resolution_events.parquet`
 - archive layout migration is explicit and copy-first via:
   - `py-earnings-calls storage migrate-layout`
+
+Wave 2 canonical now:
+
+- canonical provider read surface on `m-cache earnings`:
+  - `providers list`
+  - `providers show --provider <provider_id>`
+- canonical additive resolve surface on `m-cache earnings`:
+  - `resolve transcript --call-id ... --resolution-mode ...`
+  - `resolve forecast-snapshot --provider ... --symbol ... --date ... --resolution-mode ...`
+- additive provider/rate-limit/defer transparency on:
+  - canonical summary/progress JSON for remote-capable `m-cache earnings` paths
+  - `resolution_events.parquet` new rows
+  - detail/content API response metadata (and content headers for transcript text)
+
+Wave 3 canonical now:
+
+- transcript-only read-only augmentation planning surface on `m-cache earnings`:
+  - `aug list-types`
+  - `aug inspect-target`
+  - `aug status`
+  - `aug events`
+- transcript augmentation targeting remains `call_id`-scoped with source-text-version aware metadata mapping
+- transcript detail/content API surfaces expose additive augmentation metadata
+- numeric forecast snapshots/points remain non-augmentation resources in Wave 3
+
+Wave 4 canonical now (pilot in this repo):
+
+- this repo is a Wave 4 producer-protocol pilot implementation
+- additive transcript producer protocol surfaces:
+  - inspect target (`m-cache earnings aug inspect-target`, `GET /transcripts/{call_id}/augmentation-target`)
+  - run submission envelope (`m-cache earnings aug submit-run`, `POST /augmentations/runs`)
+  - artifact submission envelope (`m-cache earnings aug submit-artifact`, `POST /augmentations/artifacts`)
+  - run status (`m-cache earnings aug status`)
+  - event timeline (`m-cache earnings aug events`)
+- idempotent replay-safe handling:
+  - run submissions keyed by `run_id`
+  - artifact submissions keyed by explicit/derived idempotency key
+- payload schema ownership stays external/service-owned; repo validates only outer metadata envelopes
+- bounded payload handling supports locator-backed artifacts and optional bounded inline payload materialization
+
+Compatibility aliases preserved:
+
+- `m-cache earnings aug target-descriptor` (alias for target descriptor reads; canonical family uses `inspect-target`)
+- `m-cache earnings aug inspect-runs` (read-detail compatibility surface)
+- `m-cache earnings aug inspect-artifacts` (artifact inspection compatibility surface)
+
+Wave 4 reserved for later:
+
+- broad shared-package extraction rollout across repos
+- augmentation execution orchestration beyond this pilot write path
+- universal augmentation payload schema standardization
+
+Wave 5 canonical now (first extraction cut, in-repo):
+
+- `m_cache_shared` is introduced as an in-repo package for shared outer protocol/helpers.
+- extracted slice is intentionally minimal:
+  - augmentation enums/vocabularies
+  - shared protocol/internal view models
+  - outer-envelope validators
+  - pure metadata packers/builders
+  - thin helper plumbing
+- route-specific API request/response models remain local in `py_earnings_calls.api.*`.
+- transcript identity, target building, text retrieval, storage placement, and live write-path orchestration remain local.
+- transcript-only applicability remains unchanged; forecasts remain non-augmentation.
+- pilot write behavior remains unchanged:
+  - `m-cache earnings aug submit-run`
+  - `m-cache earnings aug submit-artifact`
+
+Wave 6.1 canonical now (convergence only):
+
+- canonical external identity:
+  - distribution: `m-cache-shared-ext`
+  - import root: `m_cache_shared_ext.augmentation`
+  - pin file: `requirements/m_cache_shared_external.txt`
+  - shared RC tag baseline: `v0.1.0-rc1`
+- canonical facade source-mode contract via `py_earnings_calls.augmentation_shared`:
+  - `M_CACHE_SHARED_SOURCE={auto|external|local}`
+  - `M_CACHE_SHARED_EXTERNAL_ROOT` (default `m_cache_shared_ext.augmentation`)
+  - compatibility alias retained: `PY_EARNINGS_CALLS_SHARED_SOURCE`
+- no extraction scope changes, no runtime/CLI/API semantic changes, no pilot-role changes.
+
+Wave 7 canonical now (lifecycle hardening only):
+
+- no new extraction scope.
+- no runtime behavior changes.
+- no CLI/API semantic changes.
+- no shared public API broadening.
+- this repo remains pilot consumer-validator / release blocker for transcript write-path regressions.
+- this repo is not an external-package governance owner and not a public-API broadening authority.
+- transcript-only applicability and pilot behavior remain frozen:
+  - transcript write-path behavior unchanged.
+  - forecasts remain non-augmentation.
+  - transcript identity/targeting/text retrieval/storage/API wire-shape/live orchestration stay local.
+- lifecycle artifacts are additive and repo-local:
+  - `docs/WAVE7_MIGRATION_NOTE.md`
+  - `docs/standardization/wave7_repo_lifecycle/`
+- explicit Wave 7 user-testing policy:
+  - cross-application user testing is mandatory only for compatibility-impacting stable releases.
+  - it is not required for every routine stable release.
+  - it never replaces maintainer/developer validation or RC matrix validation.
+- deferred cleanup remains deferred:
+  - no public API expansion.
+  - no immediate shim/fallback removal.
+  - no import-root collapse/removal wave.
+  - no local ownership reduction.
+
+Wave 7.1 canonical now (package-side release-execution hardening only):
+
+- no runtime behavior changes.
+- no CLI/API semantic changes.
+- no shared public API broadening.
+- no cleanup/removal work in this pass.
+- this repo remains pilot consumer-validator / release blocker for transcript write-path safety.
+- this repo contributes required validation/signoff evidence into the shared package-side release cycle.
+- this repo does not define external package governance ownership.
+- evidence artifacts remain lightweight and obligation-only, and are central-bundle inputs:
+  - `docs/WAVE7_1_MIGRATION_NOTE.md`
+  - `docs/standardization/wave7_1_repo_release_lifecycle/`
+- first-hop facade and local ownership boundaries remain frozen:
+  - `py_earnings_calls.augmentation_shared` remains first-hop.
+  - transcript identity/targeting/text retrieval/storage/API wire-shape/live write orchestration stay local.
+  - transcript-only applicability remains unchanged.
+  - forecasts remain non-augmentation.
+- comprehensive user-testing start gate is explicit:
+  - only after Wave 7.1 implementation, one shared RC fully validated across all repos, end-to-end evidence/signoff flow operation, rollback verification, and no open blocking lifecycle incident.
+- cleanup/removal remains explicitly deferred:
+  - no public API broadening.
+  - no shim/fallback removal.
+  - no env alias removal.
+  - no import-root collapse.
+  - no local ownership reduction.
+
+Wave 7.2 companion canonical now (minimal RC participation only):
+
+- companion scope stays minimal and participation-only:
+  - no runtime behavior changes.
+  - no CLI/API semantic changes.
+  - no shared API broadening.
+  - no cleanup/removal work.
+- this repo remains pilot consumer-validator / release blocker for transcript write-path safety.
+- first local RC consumption step is explicit and portable:
+  - canonical pin reference remains `requirements/m_cache_shared_external.txt`.
+  - default local RC consumption method in active virtualenv:
+    - `export M_CACHE_SHARED_EXT_LOCAL_REPO="${M_CACHE_SHARED_EXT_LOCAL_REPO:-../m-cache-shared-ext}"`
+    - `python -m pip install -e "$M_CACHE_SHARED_EXT_LOCAL_REPO"`
+- machine-readable signoff input aligns to package-side `SIGNOFF.json` fields exactly:
+  - `candidate_tag`, `repo`, `release_role`, `pin_confirmed`, `validation_status`,
+  - `signoff_state`, `blockers`, `warnings`, `rollback_ready`
+  - canonical terminal decision vocabulary: `signoff_state = pass | warn | block`.
+- all artifacts remain central-bundle inputs only:
+  - `docs/standardization/wave7_2_repo_companion/`
+  - no earnings-local release process and no separate governance system.
+- local boundaries and applicability remain frozen:
+  - `py_earnings_calls.augmentation_shared` first-hop facade unchanged.
+  - transcript-only applicability unchanged.
+  - forecasts remain non-augmentation.
+  - local transcript identity/target/text/storage/API wire-shape/live orchestration unchanged.

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/governance-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "external_repo_name",
+    "public_api_policy",
+    "required_release_artifacts"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "external_repo_name": {
+      "type": "string"
+    },
+    "public_api_policy": {
+      "type": "string"
+    },
+    "required_release_artifacts": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,6 @@
+{
+  "repo": "py-news-m",
+  "user_testing_required": true,
+  "key_user_flows": "install/upgrade/rollback, article CLI/API workflows, augmentation submission/status/events, local/auto/external mode checks",
+  "release_gate_notes": "Treat cross-application user testing as a post-Wave-7 stabilization gate before shim-retirement work."
+}

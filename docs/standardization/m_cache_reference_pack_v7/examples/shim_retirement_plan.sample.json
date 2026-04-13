@@ -1,0 +1,6 @@
+{
+  "repo": "py-earnings-calls-m",
+  "local_shims_that_must_remain": "augmentation_shared facade and local fallback path",
+  "earliest_cleanup_condition": "after multiple stable releases and successful user-testing cycles with high rollback confidence",
+  "notes": "Do not remove pilot-safety seams immediately after lifecycle hardening."
+}

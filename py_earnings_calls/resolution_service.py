@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
+import json
 
 import pandas as pd
 
@@ -9,7 +10,7 @@ from py_earnings_calls.adapters.forecasts_finnhub import FinnhubForecastAdapter
 from py_earnings_calls.adapters.forecasts_fmp import FmpForecastAdapter
 from py_earnings_calls.adapters.transcripts_motley_fool import MotleyFoolTranscriptAdapter
 from py_earnings_calls.config import AppConfig
-from py_earnings_calls.http import HttpClient
+from py_earnings_calls.http import HttpClient, HttpRequestError
 from py_earnings_calls.identifiers import (
     forecast_archive_accession_id,
     forecast_snapshot_canonical_key,
@@ -35,6 +36,11 @@ from py_earnings_calls.storage.paths import (
 from py_earnings_calls.storage.writes import upsert_parquet, write_json, write_text
 
 _UNKNOWN_CALL_DATE = date(1970, 1, 1)
+_SERVED_FROM_EVENT_MAP = {
+    "local_hit": "local_normalized",
+    "local_miss": "none",
+    "resolved_remote": "remote_then_persisted",
+}
 
 
 @dataclass(frozen=True)
@@ -49,6 +55,11 @@ class ResolutionResult:
     reason_code: str
     message: str
     persisted_locally: bool
+    rate_limited: bool = False
+    retry_count: int = 0
+    deferred_until: str | None = None
+    selection_outcome: str | None = None
+    provider_skip_reasons: list[dict[str, str]] | None = None
 
 
 class ProviderAwareResolutionService:
@@ -78,6 +89,7 @@ class ProviderAwareResolutionService:
                 reason_code=deny_reason,
                 message="Resolution mode is not allowed on this surface.",
                 persisted_locally=False,
+                selection_outcome="mode_unsupported",
             )
 
         if resolution_mode == ResolutionMode.LOCAL_ONLY:
@@ -108,6 +120,7 @@ class ProviderAwareResolutionService:
                 reason_code="NO_LOCAL_METADATA",
                 message="No local canonical transcript metadata available for this call_id.",
                 persisted_locally=False,
+                selection_outcome="failed",
             )
 
         row_matches = calls[calls["call_id"].astype(str) == str(call_id)].tail(1)
@@ -124,6 +137,7 @@ class ProviderAwareResolutionService:
                 reason_code="CALL_ID_NOT_FOUND",
                 message="Canonical transcript call_id was not found locally.",
                 persisted_locally=False,
+                selection_outcome="failed",
             )
 
         row = row_matches.iloc[0].to_dict()
@@ -143,6 +157,7 @@ class ProviderAwareResolutionService:
                 reason_code="MISSING_SOURCE_METADATA",
                 message="Transcript resolution requires local provider and source_url metadata.",
                 persisted_locally=False,
+                selection_outcome="failed",
             )
 
         provider_policy = self._resolve_provider_policy(content_domain="transcript", provider_requested=provider)
@@ -159,6 +174,8 @@ class ProviderAwareResolutionService:
                 reason_code="PROVIDER_NOT_ACTIVE",
                 message="Provider is not active in local provider registry.",
                 persisted_locally=False,
+                selection_outcome="policy_denied",
+                provider_skip_reasons=[{"provider_id": provider, "reason_code": "inactive"}],
             )
         if not bool(provider_policy.get("supports_public_resolve_if_missing", False)):
             return self._record_event(
@@ -173,6 +190,8 @@ class ProviderAwareResolutionService:
                 reason_code="POLICY_DENIED",
                 message="Provider policy does not allow public resolve_if_missing.",
                 persisted_locally=False,
+                selection_outcome="policy_denied",
+                provider_skip_reasons=[{"provider_id": provider, "reason_code": "policy_denied"}],
             )
         if not bool(provider_policy.get("supports_direct_resolution", False)):
             return self._record_event(
@@ -187,6 +206,8 @@ class ProviderAwareResolutionService:
                 reason_code="DIRECT_RESOLUTION_UNSUPPORTED",
                 message="Provider policy does not support direct record resolution.",
                 persisted_locally=False,
+                selection_outcome="policy_denied",
+                provider_skip_reasons=[{"provider_id": provider, "reason_code": "mode_unsupported"}],
             )
 
         if provider != "motley_fool":
@@ -202,6 +223,8 @@ class ProviderAwareResolutionService:
                 reason_code="ADAPTER_UNAVAILABLE",
                 message="No transcript resolver is implemented for this provider.",
                 persisted_locally=False,
+                selection_outcome="failed",
+                provider_skip_reasons=[{"provider_id": provider, "reason_code": "unavailable"}],
             )
 
         http_client = HttpClient(self._config)
@@ -210,6 +233,12 @@ class ProviderAwareResolutionService:
         if outcome.document is None or outcome.failure is not None:
             reason = outcome.failure.reason if outcome.failure else "RESOLUTION_FAILED"
             message = outcome.failure.message if outcome.failure else "Transcript provider resolution failed."
+            rate_limited = bool(outcome.failure and outcome.failure.http_status == 429)
+            retry_count = int(provider_policy.get("retry_budget", 0) or 0) if reason == "RETRY_EXHAUSTED" else 0
+            deferred_until = self._deferred_until(provider_policy) if rate_limited else None
+            if rate_limited and deferred_until is not None and provider_policy.get("graceful_degradation_policy") == "defer_and_report":
+                reason = "DEFERRED"
+                message = "Provider resolution deferred due to quota limits."
             return self._record_event(
                 content_domain="transcript",
                 canonical_key=canonical_key,
@@ -222,6 +251,11 @@ class ProviderAwareResolutionService:
                 reason_code=reason,
                 message=message,
                 persisted_locally=False,
+                selection_outcome="deferred" if reason == "DEFERRED" else "failed",
+                rate_limited=rate_limited,
+                retry_count=retry_count,
+                deferred_until=deferred_until,
+                provider_skip_reasons=[{"provider_id": provider, "reason_code": "quota_limited"}] if rate_limited else [],
             )
 
         document = outcome.document
@@ -344,6 +378,7 @@ class ProviderAwareResolutionService:
             reason_code="RESOLVED",
             message="Transcript resolved from provider and persisted locally.",
             persisted_locally=True,
+            selection_outcome="used_requested_provider",
         )
 
     def resolve_forecast_snapshot_if_missing(
@@ -378,6 +413,7 @@ class ProviderAwareResolutionService:
                 reason_code=deny_reason,
                 message="Resolution mode is not allowed on this surface.",
                 persisted_locally=False,
+                selection_outcome="mode_unsupported",
             )
 
         if resolution_mode == ResolutionMode.LOCAL_ONLY:
@@ -408,6 +444,8 @@ class ProviderAwareResolutionService:
                 reason_code="PROVIDER_NOT_ACTIVE",
                 message="Provider is not active in local provider registry.",
                 persisted_locally=False,
+                selection_outcome="policy_denied",
+                provider_skip_reasons=[{"provider_id": normalized_provider, "reason_code": "inactive"}],
             )
         if not bool(provider_policy.get("supports_public_resolve_if_missing", False)):
             return self._record_event(
@@ -422,6 +460,8 @@ class ProviderAwareResolutionService:
                 reason_code="POLICY_DENIED",
                 message="Provider policy does not allow public resolve_if_missing.",
                 persisted_locally=False,
+                selection_outcome="policy_denied",
+                provider_skip_reasons=[{"provider_id": normalized_provider, "reason_code": "policy_denied"}],
             )
         if not bool(provider_policy.get("supports_direct_resolution", False)):
             return self._record_event(
@@ -436,6 +476,8 @@ class ProviderAwareResolutionService:
                 reason_code="DIRECT_RESOLUTION_UNSUPPORTED",
                 message="Provider policy does not support direct record resolution.",
                 persisted_locally=False,
+                selection_outcome="policy_denied",
+                provider_skip_reasons=[{"provider_id": normalized_provider, "reason_code": "mode_unsupported"}],
             )
 
         http_client = HttpClient(self._config)
@@ -454,10 +496,36 @@ class ProviderAwareResolutionService:
                 reason_code="PROVIDER_UNAVAILABLE",
                 message=str(exc),
                 persisted_locally=False,
+                selection_outcome="failed",
+                provider_skip_reasons=[{"provider_id": normalized_provider, "reason_code": "missing_auth"}],
             )
 
         try:
             snapshots, points = adapter.fetch_snapshots([normalized_symbol], as_of_date)
+        except HttpRequestError as exc:
+            rate_limited = exc.failure.status_code == 429
+            deferred_until = self._deferred_until(provider_policy) if rate_limited else None
+            reason_code = "DEFERRED" if (rate_limited and deferred_until and provider_policy.get("graceful_degradation_policy") == "defer_and_report") else (
+                "QUOTA_LIMITED" if rate_limited else "RETRY_EXHAUSTED"
+            )
+            return self._record_event(
+                content_domain="forecast",
+                canonical_key=canonical_key,
+                resolution_mode=resolution_mode,
+                provider_requested=normalized_provider,
+                provider_used=normalized_provider,
+                method_used="api",
+                served_from="local_miss",
+                success=False,
+                reason_code=reason_code,
+                message=exc.failure.reason,
+                persisted_locally=False,
+                selection_outcome="deferred" if reason_code == "DEFERRED" else "failed",
+                rate_limited=rate_limited,
+                retry_count=max(0, int(exc.attempts) - 1),
+                deferred_until=deferred_until,
+                provider_skip_reasons=[{"provider_id": normalized_provider, "reason_code": "quota_limited"}] if rate_limited else [],
+            )
         except Exception as exc:  # pragma: no cover - defensive for adapter/runtime errors
             return self._record_event(
                 content_domain="forecast",
@@ -471,6 +539,7 @@ class ProviderAwareResolutionService:
                 reason_code="ADAPTER_ERROR",
                 message=str(exc),
                 persisted_locally=False,
+                selection_outcome="failed",
             )
 
         selected_snapshot = next(
@@ -504,6 +573,7 @@ class ProviderAwareResolutionService:
                 reason_code="NO_SNAPSHOT",
                 message="Provider returned no snapshot for the requested key.",
                 persisted_locally=False,
+                selection_outcome="failed",
             )
         if not selected_points:
             return self._record_event(
@@ -518,6 +588,7 @@ class ProviderAwareResolutionService:
                 reason_code="NO_POINTS",
                 message="Provider returned no usable normalized forecast points.",
                 persisted_locally=False,
+                selection_outcome="failed",
             )
 
         raw_path = forecast_raw_snapshot_path(
@@ -598,6 +669,7 @@ class ProviderAwareResolutionService:
             reason_code="RESOLVED",
             message="Forecast snapshot resolved from provider and persisted locally.",
             persisted_locally=True,
+            selection_outcome="used_requested_provider",
         )
 
     def _resolve_provider_policy(self, *, content_domain: str, provider_requested: str) -> dict | None:
@@ -632,22 +704,37 @@ class ProviderAwareResolutionService:
         reason_code: str,
         message: str,
         persisted_locally: bool,
+        selection_outcome: str | None = None,
+        rate_limited: bool = False,
+        retry_count: int = 0,
+        deferred_until: str | None = None,
+        provider_skip_reasons: list[dict[str, str]] | None = None,
     ) -> ResolutionResult:
+        skip_reasons = provider_skip_reasons or []
+        deferred = deferred_until is not None
         append_resolution_event(
             self._config,
             {
                 "event_at": datetime.now(timezone.utc).isoformat(),
+                "domain": "earnings",
                 "content_domain": content_domain,
                 "canonical_key": canonical_key,
                 "resolution_mode": resolution_mode.value,
                 "provider_requested": provider_requested or "",
                 "provider_used": provider_used or "",
                 "method_used": method_used or "",
-                "served_from": served_from,
+                "served_from": _SERVED_FROM_EVENT_MAP.get(served_from, served_from),
+                "remote_attempted": resolution_mode != ResolutionMode.LOCAL_ONLY,
                 "success": success,
                 "reason_code": reason_code,
                 "message": message,
                 "persisted_locally": persisted_locally,
+                "selection_outcome": selection_outcome or "",
+                "rate_limited": bool(rate_limited),
+                "retry_count": max(0, int(retry_count)),
+                "deferred": deferred,
+                "deferred_until": deferred_until or "",
+                "provider_skip_reasons": json.dumps(skip_reasons, sort_keys=True),
             },
         )
         return ResolutionResult(
@@ -661,12 +748,25 @@ class ProviderAwareResolutionService:
             reason_code=reason_code,
             message=message,
             persisted_locally=persisted_locally,
+            rate_limited=bool(rate_limited),
+            retry_count=max(0, int(retry_count)),
+            deferred_until=deferred_until,
+            selection_outcome=selection_outcome,
+            provider_skip_reasons=skip_reasons,
         )
 
     def _read_parquet_or_empty(self, path) -> pd.DataFrame:
         if not path.exists():
             return pd.DataFrame()
         return pd.read_parquet(path)
+
+    def _deferred_until(self, provider_policy: dict) -> str | None:
+        if str(provider_policy.get("graceful_degradation_policy") or "").strip().lower() != "defer_and_report":
+            return None
+        window_seconds = int(provider_policy.get("quota_window_seconds", 0) or 0)
+        if window_seconds <= 0:
+            window_seconds = 60
+        return (datetime.now(timezone.utc) + timedelta(seconds=window_seconds)).isoformat()
 
 
 def _build_forecast_adapter(provider: str, config: AppConfig, http_client: HttpClient):

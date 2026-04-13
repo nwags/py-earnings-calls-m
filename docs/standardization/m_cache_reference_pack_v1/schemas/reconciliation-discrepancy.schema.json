@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/reconciliation-discrepancy.schema.json",
+  "type": "object",
+  "required": [
+    "discrepancy_key",
+    "domain",
+    "target_type",
+    "discrepancy_code",
+    "details",
+    "observed_at"
+  ],
+  "properties": {
+    "discrepancy_key": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "target_type": {
+      "type": "string"
+    },
+    "seen_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "discrepancy_code": {
+      "type": "string"
+    },
+    "target_date": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "details": {
+      "type": "object"
+    },
+    "observed_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

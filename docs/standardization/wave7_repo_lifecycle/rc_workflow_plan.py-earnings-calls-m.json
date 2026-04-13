@@ -1,0 +1,7 @@
+{
+  "repo": "py-earnings-calls-m",
+  "facade_module": "py_earnings_calls.augmentation_shared",
+  "rc_validation_role": "Pilot consumer-validator and release blocker for transcript write-path regressions; not a public-API broadening authority and not external package governance owner.",
+  "full_test_command": "pytest -q",
+  "evidence_artifact": "docs/standardization/wave7_repo_lifecycle/rc_stable_evidence_checklist.md"
+}

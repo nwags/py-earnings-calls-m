@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/externalization-target.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "local_shim_module",
+    "target_external_import",
+    "keep_local_wrapper"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "local_shim_module": {
+      "type": "string"
+    },
+    "target_external_import": {
+      "type": "string"
+    },
+    "keep_local_wrapper": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

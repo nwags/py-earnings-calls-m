@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/external-identity-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "distribution_name",
+    "import_root",
+    "pin_file_path",
+    "release_candidate_tag"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "distribution_name": {
+      "type": "string"
+    },
+    "import_root": {
+      "type": "string"
+    },
+    "pin_file_path": {
+      "type": "string"
+    },
+    "release_candidate_tag": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

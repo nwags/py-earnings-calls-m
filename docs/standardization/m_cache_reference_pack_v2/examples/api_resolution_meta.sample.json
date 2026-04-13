@@ -1,0 +1,12 @@
+{
+  "resolution_mode": "resolve_if_missing",
+  "remote_attempted": true,
+  "provider_requested": "fred",
+  "provider_used": "fred",
+  "served_from": "remote_then_persisted",
+  "persisted_locally": true,
+  "rate_limited": false,
+  "retry_count": 0,
+  "deferred_until": null,
+  "reason_code": "remote_fetched"
+}

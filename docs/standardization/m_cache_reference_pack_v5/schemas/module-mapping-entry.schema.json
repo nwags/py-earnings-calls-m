@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/module-mapping-entry.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "local_module",
+    "shared_target",
+    "move_now",
+    "reason"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "local_module": {
+      "type": "string"
+    },
+    "shared_target": {
+      "type": "string"
+    },
+    "move_now": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

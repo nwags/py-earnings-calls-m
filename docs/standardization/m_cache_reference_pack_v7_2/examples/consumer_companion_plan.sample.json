@@ -1,0 +1,7 @@
+{
+  "repo": "py-fed-m",
+  "release_role": "validator + signoff",
+  "required_validation": "strict applicability, reserved submit behavior, strict-v1 shared API boundary, CLI/API invariance",
+  "evidence_input": "fed signoff note + blocker list + rollback readiness",
+  "blocker_scope": "non-pilot safety drift or strict applicability drift"
+}

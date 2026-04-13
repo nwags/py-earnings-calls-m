@@ -12,6 +12,10 @@ from py_earnings_calls.api.models import (
     ForecastLatestResponse,
     ForecastSnapshotResponse,
     HealthResponse,
+    ProducerArtifactSubmissionRequest,
+    ProducerSubmissionResponse,
+    ProducerRunSubmissionRequest,
+    ProducerTargetDescriptorResponse,
     TranscriptListItemResponse,
     TranscriptListResponse,
     TranscriptMetadataResponse,
@@ -82,12 +86,23 @@ def create_app(config: AppConfig | None = None) -> FastAPI:
             "transcript_path": metadata.get("transcript_path"),
             "served_from": resolution.get("served_from"),
             "resolution_mode": resolution.get("resolution_mode"),
+            "remote_attempted": resolution.get("remote_attempted"),
+            "provider_requested": resolution.get("provider_requested"),
             "provider_used": resolution.get("provider_used"),
             "method_used": resolution.get("method_used"),
             "success": resolution.get("success"),
             "reason_code": resolution.get("reason_code"),
             "persisted_locally": resolution.get("persisted_locally"),
+            "rate_limited": resolution.get("rate_limited"),
+            "retry_count": resolution.get("retry_count"),
+            "deferred_until": resolution.get("deferred_until"),
+            "augmentation_meta": resolution.get("augmentation_meta"),
         })
+
+    @app.get("/transcripts/{call_id}/augmentation-target", response_model=ProducerTargetDescriptorResponse)
+    async def transcript_augmentation_target(call_id: str) -> ProducerTargetDescriptorResponse:
+        descriptor = service.get_transcript_target_descriptor(call_id)
+        return ProducerTargetDescriptorResponse(**descriptor)
 
     @app.get("/transcripts/{call_id}/content")
     async def transcript_content(
@@ -109,6 +124,14 @@ def create_app(config: AppConfig | None = None) -> FastAPI:
                 "X-Resolution-Mode": str(resolution.get("resolution_mode") or ""),
                 "X-Served-From": str(resolution.get("served_from") or ""),
                 "X-Reason-Code": str(resolution.get("reason_code") or ""),
+                "X-Remote-Attempted": str(bool(resolution.get("remote_attempted"))).lower(),
+                "X-Provider-Requested": str(resolution.get("provider_requested") or ""),
+                "X-Provider-Used": str(resolution.get("provider_used") or ""),
+                "X-Rate-Limited": str(bool(resolution.get("rate_limited"))).lower(),
+                "X-Retry-Count": str(int(resolution.get("retry_count") or 0)),
+                "X-Deferred-Until": str(resolution.get("deferred_until") or ""),
+                "X-Augmentation-Available": str(bool((resolution.get("augmentation_meta") or {}).get("augmentation_available"))).lower(),
+                "X-Augmentation-Types": ",".join((resolution.get("augmentation_meta") or {}).get("augmentation_types_present", [])),
             },
         )
 
@@ -177,11 +200,40 @@ def create_app(config: AppConfig | None = None) -> FastAPI:
             "points": payload.get("points"),
             "served_from": resolution.get("served_from"),
             "resolution_mode": resolution.get("resolution_mode"),
+            "remote_attempted": resolution.get("remote_attempted"),
+            "provider_requested": resolution.get("provider_requested"),
             "provider_used": resolution.get("provider_used"),
             "method_used": resolution.get("method_used"),
             "success": resolution.get("success"),
             "reason_code": resolution.get("reason_code"),
             "persisted_locally": resolution.get("persisted_locally"),
+            "rate_limited": resolution.get("rate_limited"),
+            "retry_count": resolution.get("retry_count"),
+            "deferred_until": resolution.get("deferred_until"),
         })
 
+    @app.post("/augmentations/runs", response_model=ProducerSubmissionResponse)
+    async def submit_augmentation_run(payload: ProducerRunSubmissionRequest) -> ProducerSubmissionResponse:
+        try:
+            result = service.submit_augmentation_run(_model_dump(payload))
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        return ProducerSubmissionResponse(**result)
+
+    @app.post("/augmentations/artifacts", response_model=ProducerSubmissionResponse)
+    async def submit_augmentation_artifact(payload: ProducerArtifactSubmissionRequest) -> ProducerSubmissionResponse:
+        try:
+            result = service.submit_augmentation_artifact(_model_dump(payload))
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        return ProducerSubmissionResponse(**result)
+
     return app
+
+
+def _model_dump(payload: object) -> dict:
+    if hasattr(payload, "model_dump"):
+        return payload.model_dump()  # type: ignore[call-arg]
+    if hasattr(payload, "dict"):
+        return payload.dict()  # type: ignore[call-arg]
+    return dict(payload)  # type: ignore[arg-type]

@@ -1,0 +1,6 @@
+{
+  "package_name": "m_cache_shared",
+  "versioning_scheme": "semver",
+  "pinning_strategy": "repos pin exact or bounded compatible versions during early rollout",
+  "rollback_strategy": "repoint local shims or downgrade pinned package version without changing repo CLI/API behavior"
+}

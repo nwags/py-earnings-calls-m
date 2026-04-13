@@ -198,6 +198,7 @@ def run_reconciliation(
     events.append(
         {
             "event_at": now,
+            "domain": "earnings",
             "event_code": "reconcile_run_completed",
             "target_date": target_date.isoformat(),
             "discrepancy_count": len(discrepancies),
@@ -267,13 +268,14 @@ def _discrepancy_row(
         raise ValueError(f"Unsupported discrepancy code: {code}")
     return {
         "discrepancy_key": key,
+        "domain": "earnings",
         "discrepancy_code": code,
         "target_type": target_type,
         "seen_key": seen_key,
         "symbol": symbol,
         "provider": provider,
         "target_date": target_date,
-        "details": str(details),
+        "details": details,
         "observed_at": now,
     }
 
@@ -284,6 +286,7 @@ def _write_discrepancies(path: Path, rows: list[dict[str, object]]) -> None:
             pd.DataFrame(
                 columns=[
                     "discrepancy_key",
+                    "domain",
                     "discrepancy_code",
                     "target_type",
                     "seen_key",
@@ -308,7 +311,9 @@ def _write_discrepancies(path: Path, rows: list[dict[str, object]]) -> None:
 def _append_events(path: Path, rows: list[dict[str, object]]) -> None:
     if not rows:
         if not path.exists():
-            pd.DataFrame(columns=["event_at", "event_code", "target_date", "discrepancy_count", "catch_up_warm"]).to_parquet(path, index=False)
+            pd.DataFrame(
+                columns=["event_at", "domain", "event_code", "target_date", "discrepancy_count", "catch_up_warm"]
+            ).to_parquet(path, index=False)
         return
     incoming = pd.DataFrame(rows)
     if path.exists():
@@ -331,6 +336,7 @@ def _apply_lookup_updates(config: AppConfig, *, visibility_changed: dict[str, bo
         events.append(
             {
                 "event_at": now,
+                "domain": "earnings",
                 "event_code": "lookup_update_skipped",
                 "target_date": None,
                 "discrepancy_count": 0,
@@ -349,6 +355,7 @@ def _apply_lookup_updates(config: AppConfig, *, visibility_changed: dict[str, bo
         events.append(
             {
                 "event_at": now,
+                "domain": "earnings",
                 "event_code": "lookup_update_incremental",
                 "target_date": None,
                 "discrepancy_count": 0,
@@ -369,6 +376,7 @@ def _apply_lookup_updates(config: AppConfig, *, visibility_changed: dict[str, bo
         events.append(
             {
                 "event_at": now,
+                "domain": "earnings",
                 "event_code": "lookup_update_full_refresh_fallback",
                 "target_date": None,
                 "discrepancy_count": 0,

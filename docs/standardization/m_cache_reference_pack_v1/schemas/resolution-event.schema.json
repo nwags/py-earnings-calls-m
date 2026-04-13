@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/resolution-event.schema.json",
+  "type": "object",
+  "required": [
+    "event_at",
+    "domain",
+    "content_domain",
+    "canonical_key",
+    "resolution_mode",
+    "method_used",
+    "served_from",
+    "remote_attempted",
+    "success",
+    "reason_code",
+    "persisted_locally"
+  ],
+  "properties": {
+    "event_at": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "content_domain": {
+      "type": "string"
+    },
+    "canonical_key": {
+      "type": "string"
+    },
+    "resolution_mode": {
+      "enum": [
+        "local_only",
+        "resolve_if_missing",
+        "refresh_if_stale"
+      ]
+    },
+    "provider_requested": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider_used": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "method_used": {
+      "type": "string"
+    },
+    "served_from": {
+      "enum": [
+        "local_cache",
+        "local_normalized",
+        "remote_then_persisted",
+        "remote_ephemeral",
+        "none"
+      ]
+    },
+    "remote_attempted": {
+      "type": "boolean"
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "persisted_locally": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,6 @@
+{
+  "repo": "py-earnings-calls-m",
+  "local_shims_that_must_remain": "Keep py_earnings_calls.augmentation_shared as first-hop facade, keep auto/external/local source-mode behavior with local fallback, keep one-cycle compatibility alias support, and keep transcript write-path local ownership boundaries.",
+  "earliest_cleanup_condition": "Only after multiple successful stable cycles, consistently green cross-repo RC/stable validation, compatibility-impacting user-testing success, and high rollback confidence.",
+  "notes": "Wave 7 is lifecycle hardening only; no direct-import cleanup wave and no shim/fallback removal in this pass."
+}

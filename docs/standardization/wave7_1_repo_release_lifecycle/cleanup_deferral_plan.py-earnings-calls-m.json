@@ -1,0 +1,6 @@
+{
+  "repo": "py-earnings-calls-m",
+  "deferred_items": "no public API broadening, no shim/fallback removal, no env alias removal, no import-root collapse, no local ownership reduction",
+  "earliest_entry_condition": "after multiple stable cycles, consistently green shared RC/stable validation, comprehensive user-testing stability, and high rollback confidence",
+  "notes": "Wave 7.1 remains package-side release-execution hardening only; cleanup/removal is out of scope."
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/producer-artifact-submission.schema.json",
+  "type": "object",
+  "required": [
+    "domain",
+    "resource_family",
+    "canonical_key",
+    "augmentation_type",
+    "source_text_version",
+    "producer_name",
+    "producer_version",
+    "payload_schema_name",
+    "payload_schema_version",
+    "success"
+  ],
+  "properties": {
+    "domain": {
+      "type": "string"
+    },
+    "resource_family": {
+      "type": "string"
+    },
+    "canonical_key": {
+      "type": "string"
+    },
+    "augmentation_type": {
+      "enum": [
+        "entity_tagging",
+        "temporal_expression_tagging"
+      ]
+    },
+    "source_text_version": {
+      "type": "string"
+    },
+    "producer_name": {
+      "type": "string"
+    },
+    "producer_version": {
+      "type": "string"
+    },
+    "payload_schema_name": {
+      "type": "string"
+    },
+    "payload_schema_version": {
+      "type": "string"
+    },
+    "artifact_locator": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payload": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

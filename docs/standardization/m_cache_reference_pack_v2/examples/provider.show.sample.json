@@ -1,0 +1,21 @@
+{
+  "provider_id": "fred",
+  "domain": "fed",
+  "content_domain": "series",
+  "display_name": "FRED",
+  "provider_type": "official_api",
+  "auth_type": "api_key_query",
+  "rate_limit_policy": "per_minute",
+  "soft_limit": 120,
+  "hard_limit": 120,
+  "retry_budget": 2,
+  "graceful_degradation_policy": "defer_and_report",
+  "is_active": true,
+  "effective_auth_present": false,
+  "expected_error_modes": [
+    "http_429",
+    "provider_not_configured"
+  ],
+  "user_agent_required": false,
+  "terms_url": "https://fred.stlouisfed.org/docs/api/api_key.html"
+}

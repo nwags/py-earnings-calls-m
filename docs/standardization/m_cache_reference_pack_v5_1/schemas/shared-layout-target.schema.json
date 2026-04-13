@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/shared-layout-target.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "current_layout",
+    "target_layout",
+    "requires_compat_shim"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "current_layout": {
+      "type": "string"
+    },
+    "target_layout": {
+      "type": "string"
+    },
+    "requires_compat_shim": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

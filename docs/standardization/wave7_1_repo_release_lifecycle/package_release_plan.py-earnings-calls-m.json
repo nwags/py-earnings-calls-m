@@ -1,0 +1,7 @@
+{
+  "repo": "py-earnings-calls-m",
+  "release_role": "pilot consumer-validator and release blocker for transcript write-path safety in shared package-side RC/stable execution",
+  "facade_module": "py_earnings_calls.augmentation_shared",
+  "required_validation": "pytest -q plus facade/source-mode and transcript-only applicability safety checks with unchanged CLI/API semantics",
+  "evidence_artifact": "docs/standardization/wave7_1_repo_release_lifecycle/shared_release_bundle_inputs_checklist.md"
+}

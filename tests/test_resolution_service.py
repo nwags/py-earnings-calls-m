@@ -90,11 +90,18 @@ def test_resolution_policy_denied_records_truthful_event(tmp_path):
     assert result.reason_code == "POLICY_DENIED"
     assert len(events.index) == 1
     event = events.iloc[0].to_dict()
+    assert event["domain"] == "earnings"
     assert event["content_domain"] == "forecast"
     assert event["resolution_mode"] == "resolve_if_missing"
     assert event["provider_requested"] == "fmp"
+    assert event["remote_attempted"] is True
     assert event["success"] is False
     assert event["persisted_locally"] is False
+    assert "selection_outcome" in event
+    assert "rate_limited" in event
+    assert "retry_count" in event
+    assert "deferred_until" in event
+    assert "provider_skip_reasons" in event
 
 
 def test_resolution_forecast_resolve_if_missing_persists_and_records_provenance(monkeypatch, tmp_path):
@@ -146,8 +153,9 @@ def test_resolution_forecast_resolve_if_missing_persists_and_records_provenance(
     assert points.iloc[-1]["cik"] == "0000320193"
     events = pd.read_parquet(normalized_path(config, "resolution_events"))
     assert events.iloc[-1]["method_used"] == "api"
-    assert events.iloc[-1]["served_from"] == "resolved_remote"
+    assert events.iloc[-1]["served_from"] == "remote_then_persisted"
     assert events.iloc[-1]["reason_code"] == "RESOLVED"
+    assert events.iloc[-1]["selection_outcome"] == "used_requested_provider"
 
 
 def test_resolution_transcript_resolve_if_missing_persists_and_records_provenance(monkeypatch, tmp_path):
@@ -181,7 +189,8 @@ def test_resolution_transcript_resolve_if_missing_persists_and_records_provenanc
     events = pd.read_parquet(normalized_path(config, "resolution_events"))
     assert events.iloc[-1]["content_domain"] == "transcript"
     assert events.iloc[-1]["method_used"] == "uri"
-    assert events.iloc[-1]["served_from"] == "resolved_remote"
+    assert events.iloc[-1]["served_from"] == "remote_then_persisted"
+    assert events.iloc[-1]["selection_outcome"] == "used_requested_provider"
 
 
 def test_refresh_if_stale_operator_mode_requires_admin_flag(tmp_path):

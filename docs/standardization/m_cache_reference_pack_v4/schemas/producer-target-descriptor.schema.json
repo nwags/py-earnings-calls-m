@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/producer-target-descriptor.schema.json",
+  "type": "object",
+  "required": [
+    "domain",
+    "resource_family",
+    "canonical_key",
+    "text_source",
+    "source_text_version"
+  ],
+  "properties": {
+    "domain": {
+      "type": "string"
+    },
+    "resource_family": {
+      "type": "string"
+    },
+    "canonical_key": {
+      "type": "string"
+    },
+    "text_source": {
+      "type": "string"
+    },
+    "source_text_version": {
+      "type": "string"
+    },
+    "language": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "document_time_reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "producer_hints": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

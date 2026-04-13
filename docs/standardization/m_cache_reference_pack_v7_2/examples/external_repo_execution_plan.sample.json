@@ -1,0 +1,7 @@
+{
+  "repo_name": "m-cache-shared-ext",
+  "rc_workflow": "change -> package tests -> RC cut -> evidence bundle open -> consumer validations/signoffs -> promote/reject record",
+  "evidence_bundle_root": "evidence/candidates/<tag>/",
+  "promotion_authority": "release manager per package governance",
+  "rollback_authority": "release manager with incident escalation path"
+}

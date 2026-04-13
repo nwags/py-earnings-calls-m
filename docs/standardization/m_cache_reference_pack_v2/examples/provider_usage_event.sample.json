@@ -1,0 +1,26 @@
+{
+  "event_at": "2026-04-09T12:00:00Z",
+  "domain": "news",
+  "command_path": [
+    "m-cache",
+    "news",
+    "resolve",
+    "article"
+  ],
+  "content_domain": "article",
+  "provider_requested": "newsdata",
+  "provider_used": "nyt_archive",
+  "selection_outcome": "used_fallback_provider",
+  "reason_code": "quota_limited",
+  "remote_attempted": true,
+  "rate_limited": true,
+  "retry_count": 1,
+  "deferred": false,
+  "provider_skip_reasons": [
+    {
+      "provider_id": "newsdata",
+      "reason_code": "quota_limited"
+    }
+  ],
+  "served_from": "remote_then_persisted"
+}

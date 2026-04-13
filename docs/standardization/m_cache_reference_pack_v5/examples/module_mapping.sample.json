@@ -1,0 +1,8 @@
+{
+  "repo": "py-sec-edgar-m",
+  "local_module": "py_sec_edgar.wave4_shared.validators",
+  "shared_target": "m_cache_shared.validators",
+  "move_now": true,
+  "reason": "Shared outer-envelope validation is now intentionally aligned.",
+  "notes": "Authority routing stays repo-local."
+}

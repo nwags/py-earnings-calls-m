@@ -1,0 +1,13 @@
+{
+  "provider_id": "sec",
+  "rate_limit_policy": "custom",
+  "soft_limit": 10,
+  "hard_limit": 10,
+  "burst_limit": 1,
+  "quota_window_seconds": 1,
+  "retry_budget": 2,
+  "rate_limited": true,
+  "deferred": true,
+  "deferred_until": "2026-04-09T12:00:05Z",
+  "message": "Fair-access guard triggered; back off before retrying."
+}

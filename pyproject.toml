@@ -27,6 +27,7 @@ dependencies = [
 
 [project.scripts]
 py-earnings-calls = "py_earnings_calls.cli:main"
+m-cache = "py_earnings_calls.m_cache_cli:main"
 
 [tool.setuptools.packages.find]
-include = ["py_earnings_calls*"]
+include = ["py_earnings_calls*", "m_cache_shared*"]

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/rc-validation-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "strict_public_api_only",
+    "full_test_command",
+    "rollback_mechanism"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "strict_public_api_only": {
+      "type": "boolean"
+    },
+    "full_test_command": {
+      "type": "string"
+    },
+    "rollback_mechanism": {
+      "type": "string"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

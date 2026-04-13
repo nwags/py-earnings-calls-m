@@ -9,6 +9,7 @@ from py_earnings_calls.storage.paths import normalized_path
 
 RESOLUTION_EVENT_COLUMNS = [
     "event_at",
+    "domain",
     "content_domain",
     "canonical_key",
     "resolution_mode",
@@ -16,10 +17,17 @@ RESOLUTION_EVENT_COLUMNS = [
     "provider_used",
     "method_used",
     "served_from",
+    "remote_attempted",
     "success",
     "reason_code",
     "message",
     "persisted_locally",
+    "selection_outcome",
+    "rate_limited",
+    "retry_count",
+    "deferred",
+    "deferred_until",
+    "provider_skip_reasons",
 ]
 
 
@@ -48,6 +56,7 @@ def _normalize_events(df: pd.DataFrame) -> pd.DataFrame:
         if column not in out.columns:
             out[column] = None
     out = out[RESOLUTION_EVENT_COLUMNS]
+    out["domain"] = out["domain"].astype("string").fillna("earnings").str.strip().str.lower()
     out["content_domain"] = out["content_domain"].astype("string").fillna("").str.strip().str.lower()
     out["canonical_key"] = out["canonical_key"].astype("string").fillna("").str.strip()
     out["resolution_mode"] = out["resolution_mode"].astype("string").fillna("").str.strip().str.lower()
@@ -55,10 +64,17 @@ def _normalize_events(df: pd.DataFrame) -> pd.DataFrame:
     out["provider_used"] = out["provider_used"].astype("string").fillna("").str.strip().str.lower()
     out["method_used"] = out["method_used"].astype("string").fillna("").str.strip().str.lower()
     out["served_from"] = out["served_from"].astype("string").fillna("").str.strip().str.lower()
+    out["remote_attempted"] = out["remote_attempted"].map(_coerce_bool)
     out["reason_code"] = out["reason_code"].astype("string").fillna("").str.strip().str.upper()
     out["message"] = out["message"].astype("string").fillna("").str.strip()
     out["success"] = out["success"].map(_coerce_bool)
     out["persisted_locally"] = out["persisted_locally"].map(_coerce_bool)
+    out["selection_outcome"] = out["selection_outcome"].astype("string").fillna("").str.strip().str.lower()
+    out["rate_limited"] = out["rate_limited"].map(_coerce_bool)
+    out["retry_count"] = pd.to_numeric(out["retry_count"], errors="coerce").fillna(0).astype(int)
+    out["deferred"] = out["deferred"].map(_coerce_bool)
+    out["deferred_until"] = out["deferred_until"].astype("string").fillna("").str.strip()
+    out["provider_skip_reasons"] = out["provider_skip_reasons"].astype("string").fillna("").str.strip()
     return out.reset_index(drop=True)
 
 

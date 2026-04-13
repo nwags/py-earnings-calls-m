@@ -1,0 +1,7 @@
+{
+  "repo": "py-fed-m",
+  "strict_public_api_only": true,
+  "full_test_command": "pytest -q",
+  "rollback_mechanism": "repin requirements/m_cache_shared_external.txt to prior tag or force local mode in facade",
+  "notes": "Reserved/non-executing write-path behavior must remain unchanged."
+}

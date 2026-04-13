@@ -31,6 +31,9 @@ class RuntimeActivityReporter:
     log_file: Path | None = None
     progress_json: bool = False
     progress_heartbeat_seconds: float = 0.0
+    output_schema: str = "legacy"
+    domain: str = "earnings"
+    command_path: list[str] | None = None
     _started_at: float = field(default_factory=time.monotonic, init=False)
     _last_progress_emit_at: float = field(default_factory=time.monotonic, init=False)
     _file_handle: TextIO | None = field(default=None, init=False)
@@ -38,6 +41,11 @@ class RuntimeActivityReporter:
     def __post_init__(self) -> None:
         self.log_level = normalize_log_level(self.log_level)
         self.progress_heartbeat_seconds = max(0.0, float(self.progress_heartbeat_seconds or 0.0))
+        self.output_schema = str(self.output_schema or "legacy").strip().lower()
+        if self.output_schema not in {"legacy", "canonical"}:
+            raise ValueError(f"Unsupported output schema: {self.output_schema}")
+        if self.command_path is None:
+            self.command_path = self.command.split()
         if self.log_file is not None:
             path = Path(self.log_file)
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -66,13 +74,25 @@ class RuntimeActivityReporter:
     ) -> None:
         if not self.progress_json:
             return
-        payload: dict[str, object] = {
-            "event": event,
-            "phase": phase,
-            "elapsed_seconds": round(max(0.0, time.monotonic() - self._started_at), 3),
-            "counters": counters or {},
-            "detail": detail,
-        }
+        if self.output_schema == "canonical":
+            payload: dict[str, object] = {
+                "event": _canonical_event_name(event),
+                "domain": self.domain,
+                "command_path": list(self.command_path or []),
+                "phase": phase,
+                "elapsed_seconds": round(max(0.0, time.monotonic() - self._started_at), 3),
+                "counters": counters or {},
+            }
+            if detail is not None:
+                payload["detail"] = detail
+        else:
+            payload = {
+                "event": event,
+                "phase": phase,
+                "elapsed_seconds": round(max(0.0, time.monotonic() - self._started_at), 3),
+                "counters": counters or {},
+                "detail": detail,
+            }
         line = json.dumps(payload, sort_keys=True)
         click.echo(line, err=True)
         self._write_file_line(line)
@@ -98,3 +118,11 @@ class RuntimeActivityReporter:
         self._file_handle.write(line + "\n")
         self._file_handle.flush()
 
+
+def _canonical_event_name(event: str) -> str:
+    normalized = str(event or "").strip().lower()
+    if normalized in {"started", "progress", "heartbeat", "warning", "completed", "failed", "interrupted", "deferred"}:
+        return normalized
+    if normalized in {"phase_start", "phase_completed", "iteration_start", "iteration_end"}:
+        return "progress"
+    return "progress"

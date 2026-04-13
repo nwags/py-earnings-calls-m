@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/external-repo-execution-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo_name",
+    "rc_workflow",
+    "evidence_bundle_root",
+    "promotion_authority",
+    "rollback_authority"
+  ],
+  "properties": {
+    "repo_name": {
+      "type": "string"
+    },
+    "rc_workflow": {
+      "type": "string"
+    },
+    "evidence_bundle_root": {
+      "type": "string"
+    },
+    "promotion_authority": {
+      "type": "string"
+    },
+    "rollback_authority": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

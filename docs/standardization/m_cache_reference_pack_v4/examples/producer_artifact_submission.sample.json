@@ -1,0 +1,24 @@
+{
+  "domain": "fed",
+  "resource_family": "documents",
+  "canonical_key": "document:fomc:2026-03-18-statement",
+  "augmentation_type": "temporal_expression_tagging",
+  "source_text_version": "sha256:efgh",
+  "producer_name": "timex-tagger-y",
+  "producer_version": "0.9.1",
+  "payload_schema_name": "com.example.timex-span-set",
+  "payload_schema_version": "2026-04-01",
+  "artifact_locator": ".fed_cache/augmentations/document:fomc:2026-03-18-statement/timex.json",
+  "payload": {
+    "annotations": [
+      {
+        "span_start": 120,
+        "span_end": 132,
+        "text": "next quarter",
+        "timex_type": "DURATION",
+        "normalized_value": "P3M"
+      }
+    ]
+  },
+  "success": true
+}

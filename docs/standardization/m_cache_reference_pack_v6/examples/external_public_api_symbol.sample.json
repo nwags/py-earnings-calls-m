@@ -1,0 +1,8 @@
+{
+  "module_path": "m_cache_shared.augmentation.packers",
+  "symbol_name": "pack_run_status_view",
+  "category": "packer",
+  "included_in_v1": true,
+  "reason": "Proven common subset across all four repos after Wave 5.1.",
+  "notes": "Keep additive augmentation-meta packing out of v1 until it is uniformly shared."
+}

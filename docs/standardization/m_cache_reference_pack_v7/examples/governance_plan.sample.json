@@ -1,0 +1,6 @@
+{
+  "repo": "py-sec-edgar-m",
+  "external_repo_name": "m-cache-shared-ext",
+  "public_api_policy": "strict v1 common subset only; no broadening without explicit approval and semver handling",
+  "required_release_artifacts": "tag, changelog entry, compatibility notes, rollback notes, cross-repo validation evidence"
+}

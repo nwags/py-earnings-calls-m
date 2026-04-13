@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/augmentation-artifact-meta.schema.json",
+  "type": "object",
+  "required": [
+    "domain",
+    "resource_family",
+    "canonical_key",
+    "augmentation_type",
+    "artifact_locator",
+    "producer_name",
+    "event_at",
+    "success"
+  ],
+  "properties": {
+    "domain": {
+      "type": "string"
+    },
+    "resource_family": {
+      "type": "string"
+    },
+    "canonical_key": {
+      "type": "string"
+    },
+    "augmentation_type": {
+      "enum": [
+        "entity_tagging",
+        "temporal_expression_tagging"
+      ]
+    },
+    "artifact_locator": {
+      "type": "string"
+    },
+    "source_text_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "producer_name": {
+      "type": "string"
+    },
+    "event_at": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

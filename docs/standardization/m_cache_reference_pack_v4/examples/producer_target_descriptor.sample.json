@@ -1,0 +1,12 @@
+{
+  "domain": "earnings",
+  "resource_family": "transcripts",
+  "canonical_key": "call:654f620f8cbe091c",
+  "text_source": "api:/calls/654f620f8cbe091c/content",
+  "source_text_version": "sha256:aaabbbccc111",
+  "language": "en",
+  "document_time_reference": "2026-03-26T00:00:00Z",
+  "producer_hints": {
+    "ticker": "VERI"
+  }
+}

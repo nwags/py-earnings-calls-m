@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/package-release-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "release_role",
+    "facade_module",
+    "required_validation"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "release_role": {
+      "type": "string"
+    },
+    "facade_module": {
+      "type": "string"
+    },
+    "required_validation": {
+      "type": "string"
+    },
+    "evidence_artifact": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,13 @@
+{
+  "discrepancy_key": "earnings:forecast:AAPL:2026-04-08:missing_snapshot",
+  "domain": "earnings",
+  "target_type": "forecast_snapshot",
+  "seen_key": "finnhub:AAPL:2026-04-08",
+  "discrepancy_code": "missing_snapshot",
+  "target_date": "2026-04-08",
+  "details": {
+    "provider": "finnhub",
+    "symbol": "AAPL"
+  },
+  "observed_at": "2026-04-08T17:02:00Z"
+}

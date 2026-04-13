@@ -1,0 +1,7 @@
+{
+  "repo": "py-fed-m",
+  "facade_module": "py_fed/augmentation_shared_facade.py",
+  "rc_validation_role": "validate non-pilot reserved behavior, strict applicability, and strict-v1 shared package consumption",
+  "full_test_command": "pytest -q",
+  "evidence_artifact": "RC validation note with tag, facade mode results, and suite result"
+}

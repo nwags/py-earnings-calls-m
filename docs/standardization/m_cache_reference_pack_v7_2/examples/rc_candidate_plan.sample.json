@@ -1,0 +1,6 @@
+{
+  "candidate_tag": "v0.1.0-rc1",
+  "public_api_frozen": true,
+  "required_consumer_repos": "py-sec-edgar-m, py-earnings-calls-m, py-fed-m, py-news-m",
+  "decision_record_path": "evidence/candidates/v0.1.0-rc1/DECISION.md"
+}

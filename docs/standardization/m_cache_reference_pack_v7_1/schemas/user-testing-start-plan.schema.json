@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/user-testing-start-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "requires_wave7_1_completion",
+    "requires_shared_rc_validation",
+    "key_start_gate_note"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "requires_wave7_1_completion": {
+      "type": "boolean"
+    },
+    "requires_shared_rc_validation": {
+      "type": "boolean"
+    },
+    "key_start_gate_note": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

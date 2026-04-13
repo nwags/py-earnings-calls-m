@@ -1,0 +1,6 @@
+{
+  "repo": "py-earnings-calls-m",
+  "user_testing_required": true,
+  "key_user_flows": "Install/upgrade/rollback and operator integration flows across applications are mandatory only for compatibility-impacting stable releases; transcript pilot CLI/API augmentation and source-mode flows remain key checks.",
+  "release_gate_notes": "Cross-application user testing is mandatory for compatibility-impacting stable releases only, is not required for every routine stable release, and is never a replacement for maintainer/developer validation or RC matrix validation."
+}

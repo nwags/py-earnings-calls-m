@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/run-status-view.schema.json",
+  "type": "object",
+  "required": [
+    "run_id",
+    "augmentation_type",
+    "canonical_key",
+    "source_text_version",
+    "producer_name",
+    "producer_version",
+    "status",
+    "success",
+    "reason_code",
+    "persisted_locally"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "idempotency_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "augmentation_type": {
+      "type": "string"
+    },
+    "canonical_key": {
+      "type": "string"
+    },
+    "source_text_version": {
+      "type": "string"
+    },
+    "producer_name": {
+      "type": "string"
+    },
+    "producer_version": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "persisted_locally": {
+      "type": "boolean"
+    },
+    "augmentation_stale": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "last_updated_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

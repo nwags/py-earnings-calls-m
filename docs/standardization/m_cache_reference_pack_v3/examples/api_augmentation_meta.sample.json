@@ -1,0 +1,10 @@
+{
+  "augmentation_available": true,
+  "augmentation_types_present": [
+    "entity_tagging",
+    "temporal_expression_tagging"
+  ],
+  "last_augmented_at": "2026-04-08T17:04:00Z",
+  "augmentation_stale": false,
+  "inspect_path": "/documents/fomc-2026-03-18/augmentations"
+}

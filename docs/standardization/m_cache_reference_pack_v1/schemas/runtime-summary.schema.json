@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/runtime-summary.schema.json",
+  "type": "object",
+  "required": [
+    "status",
+    "domain",
+    "command_path",
+    "started_at",
+    "finished_at",
+    "elapsed_seconds",
+    "remote_attempted",
+    "rate_limited",
+    "retry_count",
+    "counters",
+    "warnings",
+    "errors"
+  ],
+  "properties": {
+    "status": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "command_path": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "finished_at": {
+      "type": "string"
+    },
+    "elapsed_seconds": {
+      "type": "number"
+    },
+    "resolution_mode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "remote_attempted": {
+      "type": "boolean"
+    },
+    "provider_requested": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider_used": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rate_limited": {
+      "type": "boolean"
+    },
+    "retry_count": {
+      "type": "integer"
+    },
+    "persisted_locally": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "counters": {
+      "type": "object"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

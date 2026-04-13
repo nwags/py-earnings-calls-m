@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/versioning-plan.schema.json",
+  "type": "object",
+  "required": [
+    "package_name",
+    "versioning_scheme",
+    "pinning_strategy",
+    "rollback_strategy"
+  ],
+  "properties": {
+    "package_name": {
+      "type": "string"
+    },
+    "versioning_scheme": {
+      "type": "string"
+    },
+    "pinning_strategy": {
+      "type": "string"
+    },
+    "rollback_strategy": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

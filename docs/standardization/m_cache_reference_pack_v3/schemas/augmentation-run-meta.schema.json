@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/augmentation-run-meta.schema.json",
+  "type": "object",
+  "required": [
+    "run_id",
+    "domain",
+    "resource_family",
+    "canonical_key",
+    "augmentation_type",
+    "producer_kind",
+    "producer_name",
+    "status",
+    "success",
+    "reason_code",
+    "persisted_locally"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "resource_family": {
+      "type": "string"
+    },
+    "canonical_key": {
+      "type": "string"
+    },
+    "augmentation_type": {
+      "enum": [
+        "entity_tagging",
+        "temporal_expression_tagging"
+      ]
+    },
+    "source_text_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "producer_kind": {
+      "enum": [
+        "llm",
+        "rules",
+        "hybrid",
+        "manual"
+      ]
+    },
+    "producer_name": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "completed",
+        "failed",
+        "deferred",
+        "skipped"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "persisted_locally": {
+      "type": "boolean"
+    },
+    "latency_ms": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "rate_limited": {
+      "type": "boolean"
+    },
+    "retry_count": {
+      "type": "integer"
+    },
+    "deferred_until": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

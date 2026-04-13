@@ -1,0 +1,11 @@
+{
+  "candidate_tag": "v0.1.0-rc2",
+  "repo": "py-earnings-calls-m",
+  "release_role": "pilot consumer-validator for transcript write-path safety",
+  "pin_confirmed": true,
+  "validation_status": "pass",
+  "signoff_state": "pass",
+  "blockers": [],
+  "warnings": [],
+  "rollback_ready": true
+}

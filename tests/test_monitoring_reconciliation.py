@@ -163,6 +163,8 @@ def test_reconciliation_persists_discrepancies_and_events(tmp_path):
     result = run_reconciliation(config, target_date=date(2026, 3, 27), symbols=["AAPL"], max_symbols=10, catch_up_warm=False)
     assert result["mode"] == "reconcile"
     discrepancies = pd.read_parquet(normalized_path(config, "reconciliation_discrepancies"))
+    assert "domain" in discrepancies.columns
+    assert set(discrepancies["domain"].astype(str).tolist()) == {"earnings"}
     codes = set(discrepancies["discrepancy_code"].astype(str).tolist())
     assert "missing_transcript_raw" in codes
     assert "missing_transcript_parsed" in codes
@@ -171,6 +173,8 @@ def test_reconciliation_persists_discrepancies_and_events(tmp_path):
     assert "retryable_transcript_failure" in codes
     events = pd.read_parquet(normalized_path(config, "reconciliation_events"))
     assert not events.empty
+    assert "domain" in events.columns
+    assert set(events["domain"].astype(str).tolist()) == {"earnings"}
 
 
 def test_monitoring_legacy_path_fallback_prevents_false_missing(tmp_path):

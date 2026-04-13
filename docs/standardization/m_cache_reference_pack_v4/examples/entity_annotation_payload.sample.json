@@ -1,0 +1,12 @@
+{
+  "span_start": 48,
+  "span_end": 62,
+  "text": "Federal Reserve",
+  "label": "ORG",
+  "confidence": 0.992,
+  "normalized_text": "Federal Reserve",
+  "canonical_entity_id": "org:federal_reserve",
+  "attributes": {
+    "source": "producer-example"
+  }
+}

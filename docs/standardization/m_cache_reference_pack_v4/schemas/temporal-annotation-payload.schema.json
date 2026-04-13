@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/temporal-annotation-payload.schema.json",
+  "type": "object",
+  "required": [
+    "span_start",
+    "span_end",
+    "text",
+    "timex_type",
+    "normalized_value"
+  ],
+  "properties": {
+    "span_start": {
+      "type": "integer"
+    },
+    "span_end": {
+      "type": "integer"
+    },
+    "text": {
+      "type": "string"
+    },
+    "timex_type": {
+      "type": "string"
+    },
+    "normalized_value": {
+      "type": "string"
+    },
+    "document_time_reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "anchor_time": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "attributes": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

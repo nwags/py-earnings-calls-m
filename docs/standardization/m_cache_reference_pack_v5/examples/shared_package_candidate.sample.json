@@ -1,0 +1,8 @@
+{
+  "module_name": "py_news.augmentation",
+  "symbol_name": "validate_producer_run_submission",
+  "category": "validator",
+  "rationale": "Outer-envelope validation semantics are now intentionally shared across repos.",
+  "safe_to_extract_now": true,
+  "notes": "Requires local wrapper to preserve repo-specific runtime role."
+}

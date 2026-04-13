@@ -1,0 +1,6 @@
+{
+  "repo": "py-fed-m",
+  "required_signoff": "fed validator + signoff required before stable promotion",
+  "blocker_conditions": "strict applicability drift, reserved submit behavior drift, strict-v1 shared API drift",
+  "rollback_path": "repin to prior stable tag and preserve local facade mode if needed"
+}

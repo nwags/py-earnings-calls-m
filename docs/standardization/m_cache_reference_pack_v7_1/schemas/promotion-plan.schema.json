@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/promotion-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "required_signoff",
+    "blocker_conditions",
+    "rollback_path"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "required_signoff": {
+      "type": "string"
+    },
+    "blocker_conditions": {
+      "type": "string"
+    },
+    "rollback_path": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

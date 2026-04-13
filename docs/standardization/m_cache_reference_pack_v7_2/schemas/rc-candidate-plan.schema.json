@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/rc-candidate-plan.schema.json",
+  "type": "object",
+  "required": [
+    "candidate_tag",
+    "public_api_frozen",
+    "required_consumer_repos",
+    "decision_record_path"
+  ],
+  "properties": {
+    "candidate_tag": {
+      "type": "string"
+    },
+    "public_api_frozen": {
+      "type": "boolean"
+    },
+    "required_consumer_repos": {
+      "type": "string"
+    },
+    "decision_record_path": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,21 @@
+{
+  "event_at": "2026-04-08T17:01:00Z",
+  "domain": "news",
+  "content_domain": "article",
+  "canonical_key": "article:nyt://article/11111111-1111-1111-1111-111111111111",
+  "resolution_mode": "resolve_if_missing",
+  "provider_requested": "nyt_archive",
+  "provider_used": "nyt_archive",
+  "method_used": "api_fetch",
+  "served_from": "remote_then_persisted",
+  "remote_attempted": true,
+  "success": true,
+  "reason_code": "metadata_refreshed",
+  "message": "Fetched missing article metadata and persisted local state.",
+  "persisted_locally": true,
+  "http_status": 200,
+  "retry_count": 0,
+  "rate_limited": false,
+  "deferred_until": null,
+  "latency_ms": 412
+}

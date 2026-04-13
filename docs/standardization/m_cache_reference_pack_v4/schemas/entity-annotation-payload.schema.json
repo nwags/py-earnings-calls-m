@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/entity-annotation-payload.schema.json",
+  "type": "object",
+  "required": [
+    "span_start",
+    "span_end",
+    "text",
+    "label"
+  ],
+  "properties": {
+    "span_start": {
+      "type": "integer"
+    },
+    "span_end": {
+      "type": "integer"
+    },
+    "text": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "normalized_text": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "canonical_entity_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "attributes": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

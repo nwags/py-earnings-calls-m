@@ -1,0 +1,28 @@
+[
+  {
+    "provider_id": "finnhub",
+    "domain": "earnings",
+    "content_domain": "forecast",
+    "display_name": "Finnhub",
+    "provider_type": "partner_api",
+    "is_active": true,
+    "fallback_priority": 10,
+    "rate_limit_policy": "per_minute",
+    "direct_resolution_allowed": true,
+    "supports_direct_resolution": true,
+    "supports_incremental_refresh": true
+  },
+  {
+    "provider_id": "motley_fool",
+    "domain": "earnings",
+    "content_domain": "transcript",
+    "display_name": "Motley Fool",
+    "provider_type": "official_site",
+    "is_active": true,
+    "fallback_priority": 20,
+    "rate_limit_policy": "unknown",
+    "direct_resolution_allowed": true,
+    "supports_direct_resolution": true,
+    "supports_incremental_refresh": true
+  }
+]

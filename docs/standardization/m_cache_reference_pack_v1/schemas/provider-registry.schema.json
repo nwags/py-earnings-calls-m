@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/provider-registry.schema.json",
+  "type": "object",
+  "required": [
+    "provider_id",
+    "domain",
+    "content_domain",
+    "provider_type",
+    "display_name",
+    "auth_type",
+    "rate_limit_policy",
+    "direct_resolution_allowed",
+    "browse_discovery_allowed",
+    "supports_bulk_history",
+    "supports_incremental_refresh",
+    "supports_direct_resolution",
+    "supports_public_resolve_if_missing",
+    "supports_admin_refresh_if_stale",
+    "graceful_degradation_policy",
+    "is_active"
+  ],
+  "properties": {
+    "provider_id": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "content_domain": {
+      "type": "string"
+    },
+    "provider_type": {
+      "enum": [
+        "official_api",
+        "official_site",
+        "rss_feed",
+        "bulk_dataset",
+        "partner_api",
+        "local_dataset",
+        "manual_input"
+      ]
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "base_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "auth_type": {
+      "enum": [
+        "none",
+        "api_key_header",
+        "api_key_query",
+        "bearer_token",
+        "basic_auth",
+        "session_cookie",
+        "custom"
+      ]
+    },
+    "auth_env_var": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rate_limit_policy": {
+      "enum": [
+        "unknown",
+        "fixed_window",
+        "sliding_window",
+        "token_bucket",
+        "per_minute",
+        "per_hour",
+        "per_day",
+        "custom"
+      ]
+    },
+    "soft_limit": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "hard_limit": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "burst_limit": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "retry_budget": {
+      "type": "integer"
+    },
+    "backoff_policy": {
+      "type": "string"
+    },
+    "direct_resolution_allowed": {
+      "type": "boolean"
+    },
+    "browse_discovery_allowed": {
+      "type": "boolean"
+    },
+    "supports_bulk_history": {
+      "type": "boolean"
+    },
+    "supports_incremental_refresh": {
+      "type": "boolean"
+    },
+    "supports_direct_resolution": {
+      "type": "boolean"
+    },
+    "supports_public_resolve_if_missing": {
+      "type": "boolean"
+    },
+    "supports_admin_refresh_if_stale": {
+      "type": "boolean"
+    },
+    "graceful_degradation_policy": {
+      "enum": [
+        "return_local_stale_if_available",
+        "return_local_metadata_only",
+        "defer_and_report",
+        "fail_fast"
+      ]
+    },
+    "free_tier_notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fallback_priority": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "is_active": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

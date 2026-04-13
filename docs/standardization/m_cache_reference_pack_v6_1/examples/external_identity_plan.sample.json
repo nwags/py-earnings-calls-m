@@ -1,0 +1,7 @@
+{
+  "repo": "py-news-m",
+  "distribution_name": "m-cache-shared-ext",
+  "import_root": "m_cache_shared_ext.augmentation",
+  "pin_file_path": "requirements/m_cache_shared_external.txt",
+  "release_candidate_tag": "v0.1.0-rc1"
+}

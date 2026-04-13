@@ -1,0 +1,13 @@
+{
+  "resolution_mode": "resolve_if_missing",
+  "provider_requested": "motley_fool",
+  "provider_used": "motley_fool",
+  "served_from": "remote_then_persisted",
+  "remote_attempted": true,
+  "persisted_locally": true,
+  "success": true,
+  "reason_code": "remote_fetched",
+  "rate_limited": false,
+  "retry_count": 1,
+  "deferred_until": null
+}

@@ -1,0 +1,7 @@
+{
+  "repo": "py-news-m",
+  "current_layout": "flat m_cache_shared/{models,vocab,schemas,packers,cli_helpers}.py",
+  "target_layout": "m_cache_shared/augmentation/{models,enums,validators,schema_loaders,packers,cli_helpers}.py",
+  "requires_compat_shim": true,
+  "notes": "Temporary flat-module re-exports allowed during first normalization pass."
+}

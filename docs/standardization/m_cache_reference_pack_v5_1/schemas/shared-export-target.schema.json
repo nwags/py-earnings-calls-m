@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/shared-export-target.schema.json",
+  "type": "object",
+  "required": [
+    "module_path",
+    "symbol_name",
+    "category",
+    "canonical_name"
+  ],
+  "properties": {
+    "module_path": {
+      "type": "string"
+    },
+    "symbol_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "canonical_name": {
+      "type": "string"
+    },
+    "compatibility_aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

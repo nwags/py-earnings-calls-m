@@ -1,0 +1,3 @@
+{"event": "started", "domain": "sec", "command_path": ["m-cache", "sec", "monitor", "loop"], "phase": "startup", "elapsed_seconds": 0.0, "counters": {}}
+{"event": "progress", "domain": "sec", "command_path": ["m-cache", "sec", "monitor", "loop"], "phase": "iteration", "elapsed_seconds": 30.5, "counters": {"candidate_count": 12, "attempted_count": 12, "succeeded_count": 11}, "window_date": "2026-04-08", "window_index": 1, "window_total": 5}
+{"event": "completed", "domain": "sec", "command_path": ["m-cache", "sec", "monitor", "loop"], "phase": "finalize", "elapsed_seconds": 151.2, "counters": {"iterations_run": 5, "succeeded_count": 56, "failed_count": 2}}

@@ -1,0 +1,8 @@
+{
+  "repo": "py-sec-edgar-m",
+  "facade_module": "py_sec_edgar.wave4_shared._shared_backend",
+  "source_mode_env_var": "M_CACHE_SHARED_SOURCE",
+  "external_root_env_var": "M_CACHE_SHARED_EXTERNAL_ROOT",
+  "default_external_root": "m_cache_shared_ext.augmentation",
+  "fallback_behavior": "auto mode tries external first, verifies strict v1 symbol set, then falls back to local"
+}

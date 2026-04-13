@@ -1,0 +1,75 @@
+[global]
+app_root = "."
+log_level = "INFO"
+default_summary_json = false
+default_progress_json = false
+
+[domains.sec]
+enabled = true
+cache_root = ".sec_cache"
+normalized_refdata_root = "refdata/normalized"
+lookup_root = "refdata/normalized"
+default_resolution_mode = "local_only"
+
+[domains.sec.providers.sec]
+enabled = true
+auth_type = "none"
+auth_env_var = ""
+rate_limit_policy = "custom"
+soft_limit = 10
+hard_limit = 10
+burst_limit = 1
+retry_budget = 2
+direct_resolution_allowed = true
+browse_discovery_allowed = true
+fallback_priority = 10
+free_tier_notes = "Respect fair-access rules and declared user-agent requirements."
+
+[domains.earnings]
+enabled = true
+cache_root = ".earnings_cache"
+normalized_refdata_root = "refdata/normalized"
+lookup_root = "refdata/normalized"
+default_resolution_mode = "local_only"
+
+[domains.earnings.providers.motley_fool]
+enabled = true
+auth_type = "none"
+auth_env_var = ""
+rate_limit_policy = "unknown"
+soft_limit = 0
+hard_limit = 0
+burst_limit = 0
+retry_budget = 2
+direct_resolution_allowed = true
+browse_discovery_allowed = false
+fallback_priority = 10
+free_tier_notes = "Use manifest-driven backfill; discovery should remain bounded."
+
+[domains.earnings.providers.finnhub]
+enabled = true
+auth_type = "api_key_header"
+auth_env_var = "FINNHUB_API_KEY"
+rate_limit_policy = "per_minute"
+soft_limit = 60
+hard_limit = 60
+burst_limit = 5
+retry_budget = 2
+direct_resolution_allowed = true
+browse_discovery_allowed = true
+fallback_priority = 10
+free_tier_notes = "Free tier limits may require deferral."
+
+[domains.fed]
+enabled = true
+cache_root = ".fed_cache"
+normalized_refdata_root = "refdata/normalized"
+lookup_root = "refdata/normalized"
+default_resolution_mode = "local_only"
+
+[domains.news]
+enabled = true
+cache_root = ".news_cache"
+normalized_refdata_root = "refdata/normalized"
+lookup_root = "refdata/normalized"
+default_resolution_mode = "local_only"

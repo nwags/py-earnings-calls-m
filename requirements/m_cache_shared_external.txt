@@ -1,0 +1,2 @@
+# Wave 7.2 companion execution pin (canonical external identity + shared RC tag).
+m-cache-shared-ext @ git+https://github.com/m-cache/m_cache_shared_ext.git@v0.1.0-rc2

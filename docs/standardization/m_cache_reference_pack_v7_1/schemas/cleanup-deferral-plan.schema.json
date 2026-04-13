@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/cleanup-deferral-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "deferred_items",
+    "earliest_entry_condition"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "deferred_items": {
+      "type": "string"
+    },
+    "earliest_entry_condition": {
+      "type": "string"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

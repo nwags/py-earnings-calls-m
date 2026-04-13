@@ -20,8 +20,24 @@ def test_provider_registry_materializes_deterministically(tmp_path):
     df = pd.read_parquet(path)
 
     assert list(df.columns) == PROVIDER_REGISTRY_COLUMNS
-    assert set(df["provider_id"].tolist()) >= {"motley_fool", "finnhub", "fmp"}
+    assert set(df["provider_id"].tolist()) >= {
+        "motley_fool",
+        "finnhub",
+        "fmp",
+        "kaggle_motley_fool",
+        "local_tabular",
+        "motley_fool_pickle",
+    }
     assert set(df["content_domain"].tolist()) >= {"transcript", "forecast"}
+    assert set(df["domain"].tolist()) == {"earnings"}
+    assert "fallback_priority" in df.columns
+    assert "auth_env_var" in df.columns
+    assert "display_name" in df.columns
+    assert "default_timeout_seconds" in df.columns
+    assert "quota_window_seconds" in df.columns
+    assert "expected_error_modes" in df.columns
+    assert "user_agent_required" in df.columns
+    assert "terms_url" in df.columns
 
 
 def test_provider_registry_local_override(tmp_path):
@@ -54,6 +70,7 @@ def test_provider_resolution_candidates_filter_by_domain_and_provider(tmp_path):
     forecast_candidates = provider_resolution_candidates(registry, content_domain="forecast")
     assert forecast_candidates[0]["provider_id"] == "finnhub"
     assert all(item["content_domain"] == "forecast" for item in forecast_candidates)
+    assert all(item["domain"] == "earnings" for item in forecast_candidates)
 
     transcript_candidate = provider_resolution_candidates(
         registry,

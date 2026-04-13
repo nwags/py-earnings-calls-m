@@ -1,0 +1,12 @@
+{
+  "event_at": "2026-04-08T17:02:10Z",
+  "domain": "fed",
+  "event_code": "reconcile_completed",
+  "target_date": "2026-04-08",
+  "discrepancy_count": 3,
+  "catch_up_warm": true,
+  "provider": "fred",
+  "window_from": "2026-04-01",
+  "window_to": "2026-04-08",
+  "lookup_refreshed": true
+}

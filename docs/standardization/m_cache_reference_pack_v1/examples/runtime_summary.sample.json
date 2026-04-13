@@ -1,0 +1,29 @@
+{
+  "status": "ok",
+  "domain": "earnings",
+  "command_path": [
+    "m-cache",
+    "earnings",
+    "transcripts",
+    "backfill"
+  ],
+  "started_at": "2026-04-08T17:00:00Z",
+  "finished_at": "2026-04-08T17:00:09Z",
+  "elapsed_seconds": 9.12,
+  "resolution_mode": null,
+  "remote_attempted": true,
+  "provider_requested": "motley_fool",
+  "provider_used": "motley_fool",
+  "rate_limited": false,
+  "retry_count": 1,
+  "persisted_locally": true,
+  "counters": {
+    "candidate_count": 25,
+    "attempted_count": 25,
+    "succeeded_count": 23,
+    "failed_count": 2,
+    "persisted_count": 23
+  },
+  "warnings": [],
+  "errors": []
+}

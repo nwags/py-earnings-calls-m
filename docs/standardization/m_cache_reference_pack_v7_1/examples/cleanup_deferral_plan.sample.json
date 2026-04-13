@@ -1,0 +1,6 @@
+{
+  "repo": "py-earnings-calls-m",
+  "deferred_items": "shim removal, env alias removal, import-root collapse, public API broadening",
+  "earliest_entry_condition": "after multiple stable cycles, shared RC/stable execution success, and comprehensive user testing passes",
+  "notes": "Pilot write-path safety seams should remain conservative."
+}

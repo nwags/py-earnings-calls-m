@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/rate-limit-state.schema.json",
+  "type": "object",
+  "required": [
+    "provider_id",
+    "rate_limit_policy",
+    "rate_limited",
+    "deferred"
+  ],
+  "properties": {
+    "provider_id": {
+      "type": "string"
+    },
+    "rate_limit_policy": {
+      "type": "string"
+    },
+    "rate_limited": {
+      "type": "boolean"
+    },
+    "deferred": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

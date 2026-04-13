@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/api-augmentation-meta.schema.json",
+  "type": "object",
+  "required": [
+    "augmentation_available",
+    "augmentation_types_present"
+  ],
+  "properties": {
+    "augmentation_available": {
+      "type": "boolean"
+    },
+    "augmentation_types_present": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_augmented_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "augmentation_stale": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "inspect_path": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

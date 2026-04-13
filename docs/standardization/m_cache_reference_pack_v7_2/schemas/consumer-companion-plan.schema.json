@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/consumer-companion-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "release_role",
+    "required_validation",
+    "evidence_input",
+    "blocker_scope"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "release_role": {
+      "type": "string"
+    },
+    "required_validation": {
+      "type": "string"
+    },
+    "evidence_input": {
+      "type": "string"
+    },
+    "blocker_scope": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

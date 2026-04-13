@@ -1,0 +1,17 @@
+{
+  "run_id": "aug-run-1001",
+  "domain": "news",
+  "resource_family": "articles",
+  "canonical_key": "article:nyt://article/11111111-1111-1111-1111-111111111111",
+  "augmentation_type": "entity_tagging",
+  "source_text_version": "sha256:abcd",
+  "producer_kind": "llm",
+  "producer_name": "entity-tagger-x",
+  "producer_version": "1.2.0",
+  "payload_schema_name": "com.example.entity-span-set",
+  "payload_schema_version": "2026-04-01",
+  "status": "completed",
+  "success": true,
+  "reason_code": "completed",
+  "persisted_locally": true
+}

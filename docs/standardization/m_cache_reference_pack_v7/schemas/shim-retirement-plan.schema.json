@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/shim-retirement-plan.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "local_shims_that_must_remain",
+    "earliest_cleanup_condition"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "local_shims_that_must_remain": {
+      "type": "string"
+    },
+    "earliest_cleanup_condition": {
+      "type": "string"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

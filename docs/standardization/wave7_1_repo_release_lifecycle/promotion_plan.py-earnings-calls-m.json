@@ -1,0 +1,6 @@
+{
+  "repo": "py-earnings-calls-m",
+  "required_signoff": "explicit repo validator signoff that transcript write-path safety, transcript-only applicability, and local-ownership boundaries are unchanged for the candidate",
+  "blocker_conditions": "transcript write-path regression; role/applicability/authority drift; facade/source-mode or strict-v1 surface drift; CLI/API semantic drift; unresolved blocking lifecycle incident",
+  "rollback_path": "repin requirements/m_cache_shared_external.txt to prior stable tag and force M_CACHE_SHARED_SOURCE=local when needed while preserving public CLI/API behavior"
+}

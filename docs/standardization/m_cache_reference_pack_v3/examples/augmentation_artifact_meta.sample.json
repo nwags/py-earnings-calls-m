@@ -1,0 +1,11 @@
+{
+  "domain": "fed",
+  "resource_family": "documents",
+  "canonical_key": "document:fomc:2026-03-18-statement",
+  "augmentation_type": "temporal_expression_tagging",
+  "artifact_locator": ".fed_cache/augmentations/document:fomc:2026-03-18-statement/temporal_expression_tagging.json",
+  "source_text_version": "sha256:efgh",
+  "producer_name": "temporal-tagger-v1",
+  "event_at": "2026-04-08T17:04:00Z",
+  "success": true
+}

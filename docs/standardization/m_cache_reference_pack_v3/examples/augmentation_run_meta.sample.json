@@ -1,0 +1,19 @@
+{
+  "run_id": "aug-run-0001",
+  "domain": "news",
+  "resource_family": "articles",
+  "canonical_key": "article:nyt://article/11111111-1111-1111-1111-111111111111",
+  "augmentation_type": "entity_tagging",
+  "source_text_version": "sha256:abcd",
+  "producer_kind": "llm",
+  "producer_name": "entity-tagger-v1",
+  "status": "completed",
+  "success": true,
+  "reason_code": "completed",
+  "message": "Entity tagging completed.",
+  "persisted_locally": true,
+  "latency_ms": 842,
+  "rate_limited": false,
+  "retry_count": 0,
+  "deferred_until": null
+}

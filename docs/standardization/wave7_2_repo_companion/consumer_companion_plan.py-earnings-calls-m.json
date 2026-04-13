@@ -1,0 +1,7 @@
+{
+  "repo": "py-earnings-calls-m",
+  "release_role": "pilot consumer-validator and release blocker for transcript write-path safety",
+  "required_validation": "pin shared RC reference, consume local RC in active venv via portable sibling source copied to writable /tmp editable-install path using venv python and --no-build-isolation, run required validation commands, and preserve runtime/CLI/API semantics",
+  "evidence_input": "central-bundle SIGNOFF.json fields plus companion markdown evidence for validations, blocker scope, and rollback readiness",
+  "blocker_scope": "transcript write-path safety drift, transcript-only applicability drift, facade/shared-surface drift, CLI/API semantic drift, or rollback-readiness failure"
+}

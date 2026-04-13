@@ -1,0 +1,6 @@
+{
+  "requires_wave7_2_completion": true,
+  "requires_real_shared_rc_cycle": true,
+  "requires_evidence_bundle_operational": true,
+  "notes": "Begin comprehensive user testing only after the first real shared RC cycle completes with working signoff and rollback flow."
+}

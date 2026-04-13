@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/m-cache/shared-test-normalization-target.schema.json",
+  "type": "object",
+  "required": [
+    "repo",
+    "current_test_module",
+    "target_test_module"
+  ],
+  "properties": {
+    "repo": {
+      "type": "string"
+    },
+    "current_test_module": {
+      "type": "string"
+    },
+    "target_test_module": {
+      "type": "string"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
