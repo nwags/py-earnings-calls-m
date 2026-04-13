@@ -52,7 +52,7 @@ def test_shared_facade_pin_metadata_is_explicit_and_centralized() -> None:
     assert pin["pin_file"] == "requirements/m_cache_shared_external.txt"
     assert pin["distribution"] == "m-cache-shared-ext"
     assert pin["git_url"] == "https://github.com/m-cache/m_cache_shared_ext.git"
-    assert pin["git_tag"] == "v0.1.0-rc2"
+    assert pin["git_tag"] == "v0.1.0-rc9"
     assert pin["default_external_root"] == "m_cache_shared_ext.augmentation"
     assert pin["source_mode_env_var"] == "M_CACHE_SHARED_SOURCE"
     assert pin["external_root_env_var"] == "M_CACHE_SHARED_EXTERNAL_ROOT"

@@ -75,6 +75,20 @@ class ProviderAwareResolutionService:
         public_surface: bool = True,
     ) -> ResolutionResult:
         canonical_key = transcript_canonical_key(call_id)
+        local_transcript = self._local_transcript_hit(call_id=call_id)
+        if local_transcript is not None:
+            return ResolutionResult(
+                found=True,
+                served_from="local_hit",
+                resolution_mode=resolution_mode.value,
+                provider_requested=local_transcript.get("provider"),
+                provider_used=local_transcript.get("provider"),
+                method_used="local_lookup",
+                success=True,
+                reason_code="LOCAL_HIT",
+                message="Transcript is already available in local lookup artifacts.",
+                persisted_locally=False,
+            )
         mode_allowed, deny_reason = self._is_mode_allowed(resolution_mode, allow_admin=allow_admin, public_surface=public_surface)
         if not mode_allowed:
             return self._record_event(
@@ -398,6 +412,23 @@ class ProviderAwareResolutionService:
             symbol=normalized_symbol,
             as_of_date=as_of_date,
         )
+        if self._local_forecast_snapshot_hit(
+            provider=normalized_provider,
+            symbol=normalized_symbol,
+            as_of_date=as_of_date,
+        ):
+            return ResolutionResult(
+                found=True,
+                served_from="local_hit",
+                resolution_mode=resolution_mode.value,
+                provider_requested=normalized_provider,
+                provider_used=normalized_provider,
+                method_used="local_lookup",
+                success=True,
+                reason_code="LOCAL_HIT",
+                message="Forecast snapshot is already available in local lookup artifacts.",
+                persisted_locally=False,
+            )
 
         mode_allowed, deny_reason = self._is_mode_allowed(resolution_mode, allow_admin=allow_admin, public_surface=public_surface)
         if not mode_allowed:
@@ -767,6 +798,39 @@ class ProviderAwareResolutionService:
         if window_seconds <= 0:
             window_seconds = 60
         return (datetime.now(timezone.utc) + timedelta(seconds=window_seconds)).isoformat()
+
+    def _local_transcript_hit(self, *, call_id: str) -> dict[str, str | None] | None:
+        lookup = self._read_parquet_or_empty(normalized_path(self._config, "local_lookup_transcripts"))
+        if lookup.empty or "call_id" not in lookup.columns:
+            return None
+        matches = lookup[lookup["call_id"].astype(str) == str(call_id)].tail(1)
+        if matches.empty:
+            return None
+        row = matches.iloc[0].to_dict()
+        transcript_path = row.get("transcript_path")
+        transcript_text = row.get("transcript_text")
+        provider = str(row.get("provider") or "").strip().lower() or None
+        if isinstance(transcript_path, str) and transcript_path.strip():
+            return {"provider": provider}
+        if isinstance(transcript_text, str) and transcript_text.strip():
+            return {"provider": provider}
+        return None
+
+    def _local_forecast_snapshot_hit(self, *, provider: str, symbol: str, as_of_date: date) -> bool:
+        lookup = self._read_parquet_or_empty(normalized_path(self._config, "local_lookup_forecasts"))
+        if lookup.empty:
+            return False
+        required = {"provider", "symbol", "as_of_date"}
+        if not required.issubset(set(lookup.columns)):
+            return False
+        mask = (
+            lookup["provider"].astype(str).str.lower() == provider.lower()
+        ) & (
+            lookup["symbol"].astype(str).str.upper() == symbol.upper()
+        ) & (
+            lookup["as_of_date"].astype(str) == as_of_date.isoformat()
+        )
+        return bool(mask.any())
 
 
 def _build_forecast_adapter(provider: str, config: AppConfig, http_client: HttpClient):

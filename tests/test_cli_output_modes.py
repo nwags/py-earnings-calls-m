@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import pandas as pd
 
 from click.testing import CliRunner
 
@@ -74,3 +75,28 @@ def test_quiet_and_verbose_conflict_without_summary_json(monkeypatch):
     result = runner.invoke(cli.main, ["lookup", "refresh", "--quiet", "--verbose"])
     assert result.exit_code != 0
     assert "--quiet" in result.output and "--verbose" in result.output
+
+
+def test_lookup_query_compact_json_omits_large_transcript_payload_fields(monkeypatch):
+    runner = CliRunner()
+    frame = pd.DataFrame(
+        [
+            {
+                "call_id": "c1",
+                "symbol": "AAPL",
+                "transcript_text": "long text",
+                "raw_html": "<html>...</html>",
+                "provider": "motley_fool",
+            }
+        ]
+    )
+    monkeypatch.setattr(cli, "load_lookup_dataframe", lambda config, scope: frame)
+    monkeypatch.setattr(cli, "query_transcripts", lambda df, **kwargs: df)
+
+    result = runner.invoke(cli.main, ["lookup", "query", "--scope", "transcripts", "--json", "--compact-json"])
+    assert result.exit_code == 0, result.output
+    payload = json.loads(result.output.strip())
+    assert len(payload) == 1
+    assert payload[0]["call_id"] == "c1"
+    assert "transcript_text" not in payload[0]
+    assert "raw_html" not in payload[0]

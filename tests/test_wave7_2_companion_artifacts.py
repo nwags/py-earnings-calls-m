@@ -59,7 +59,7 @@ def test_wave7_2_signoff_template_uses_exact_fields_and_canonical_signoff_vocab(
         "warnings",
         "rollback_ready",
     }
-    assert payload["candidate_tag"] == "v0.1.0-rc2"
+    assert payload["candidate_tag"] == "v0.1.0-rc9"
     assert payload["signoff_state"] in {"pass", "warn", "block"}
 
 
@@ -68,7 +68,7 @@ def test_wave7_2_minimum_steps_include_portable_rc_consumption_and_exact_command
     lowered = text.lower()
     assert "requirements/m_cache_shared_external.txt" in lowered
     assert 'm_cache_shared_ext_local_repo="${m_cache_shared_ext_local_repo:-../m-cache-shared-ext}"' in lowered
-    assert 'm_cache_shared_ext_local_copy="${m_cache_shared_ext_local_copy:-/tmp/m-cache-shared-ext-rc2}"' in lowered
+    assert 'm_cache_shared_ext_local_copy="${m_cache_shared_ext_local_copy:-/tmp/m-cache-shared-ext-rc9}"' in lowered
     assert 'm_cache_shared_ext_repo_venv="${m_cache_shared_ext_repo_venv:-.venv}"' in lowered
     assert 'cp -r "$m_cache_shared_ext_local_repo" "$m_cache_shared_ext_local_copy"' in lowered
     assert '"$m_cache_shared_ext_repo_venv/bin/python" -m pip install --no-build-isolation -e "$m_cache_shared_ext_local_copy"' in lowered

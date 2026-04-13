@@ -1,5 +1,5 @@
 {
-  "candidate_tag": "v0.1.0-rc2",
+  "candidate_tag": "v0.1.0-rc9",
   "repo": "py-earnings-calls-m",
   "release_role": "pilot consumer-validator for transcript write-path safety",
   "pin_confirmed": false,

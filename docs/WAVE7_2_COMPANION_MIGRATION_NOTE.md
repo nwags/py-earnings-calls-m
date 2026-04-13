@@ -35,7 +35,7 @@ For first real local RC validation in the active virtualenv, default to sibling 
 
 ```bash
 export M_CACHE_SHARED_EXT_LOCAL_REPO="${M_CACHE_SHARED_EXT_LOCAL_REPO:-../m-cache-shared-ext}"
-export M_CACHE_SHARED_EXT_LOCAL_COPY="${M_CACHE_SHARED_EXT_LOCAL_COPY:-/tmp/m-cache-shared-ext-rc2}"
+export M_CACHE_SHARED_EXT_LOCAL_COPY="${M_CACHE_SHARED_EXT_LOCAL_COPY:-/tmp/m-cache-shared-ext-rc9}"
 export M_CACHE_SHARED_EXT_REPO_VENV="${M_CACHE_SHARED_EXT_REPO_VENV:-.venv}"
 rm -rf "$M_CACHE_SHARED_EXT_LOCAL_COPY"
 cp -R "$M_CACHE_SHARED_EXT_LOCAL_REPO" "$M_CACHE_SHARED_EXT_LOCAL_COPY"

@@ -209,3 +209,62 @@ def test_refresh_if_stale_operator_mode_requires_admin_flag(tmp_path):
     )
     assert denied.success is False
     assert denied.reason_code == "ADMIN_REQUIRED"
+
+
+def test_resolution_transcript_local_hit_returns_success_without_remote_attempt(tmp_path):
+    config = AppConfig.from_project_root(tmp_path)
+    config.ensure_runtime_dirs()
+    materialize_provider_registry(config)
+    pd.DataFrame(
+        [
+            {
+                "call_id": "c-local",
+                "provider": "motley_fool",
+                "transcript_path": "/tmp/local.txt",
+                "transcript_text": "local transcript",
+            }
+        ]
+    ).to_parquet(normalized_path(config, "local_lookup_transcripts"), index=False)
+
+    service = ProviderAwareResolutionService(config)
+    result = service.resolve_transcript_if_missing(
+        call_id="c-local",
+        resolution_mode=ResolutionMode.LOCAL_ONLY,
+    )
+
+    assert result.success is True
+    assert result.found is True
+    assert result.reason_code == "LOCAL_HIT"
+    assert result.served_from == "local_hit"
+    assert not normalized_path(config, "resolution_events").exists()
+
+
+def test_resolution_forecast_local_hit_returns_success_without_remote_attempt(tmp_path):
+    config = AppConfig.from_project_root(tmp_path)
+    config.ensure_runtime_dirs()
+    materialize_provider_registry(config)
+    pd.DataFrame(
+        [
+            {
+                "provider": "finnhub",
+                "symbol": "AAPL",
+                "as_of_date": "2026-03-26",
+                "snapshot_id": "snap-local",
+                "metric_name": "eps",
+            }
+        ]
+    ).to_parquet(normalized_path(config, "local_lookup_forecasts"), index=False)
+
+    service = ProviderAwareResolutionService(config)
+    result = service.resolve_forecast_snapshot_if_missing(
+        provider="finnhub",
+        symbol="AAPL",
+        as_of_date=date(2026, 3, 26),
+        resolution_mode=ResolutionMode.LOCAL_ONLY,
+    )
+
+    assert result.success is True
+    assert result.found is True
+    assert result.reason_code == "LOCAL_HIT"
+    assert result.served_from == "local_hit"
+    assert not normalized_path(config, "resolution_events").exists()

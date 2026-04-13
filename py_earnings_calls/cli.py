@@ -292,7 +292,13 @@ def lookup_refresh(
 @click.option("--symbol", default=None)
 @click.option("--call-id", default=None)
 @click.option("--json", "as_json", is_flag=True, default=False)
-def lookup_query(scope: str, symbol: str | None, call_id: str | None, as_json: bool) -> None:
+@click.option(
+    "--compact-json",
+    is_flag=True,
+    default=False,
+    help="When used with --json, omit large transcript payload fields for operator readability.",
+)
+def lookup_query(scope: str, symbol: str | None, call_id: str | None, as_json: bool, compact_json: bool) -> None:
     config = load_config()
     df = load_lookup_dataframe(config, scope=scope)
     if scope == "transcripts":
@@ -301,7 +307,10 @@ def lookup_query(scope: str, symbol: str | None, call_id: str | None, as_json: b
         filtered = query_forecasts(df, symbol=symbol)
 
     if as_json:
-        click.echo(json.dumps(filtered.to_dict(orient="records"), sort_keys=True))
+        payload = filtered.to_dict(orient="records")
+        if compact_json and scope == "transcripts":
+            payload = _compact_transcript_json_rows(payload)
+        click.echo(json.dumps(payload, sort_keys=True))
     elif filtered.empty:
         click.echo("No rows matched.")
     else:
@@ -712,6 +721,16 @@ def _summary_counters(result: dict[str, object]) -> dict[str, object]:
         if key in result:
             out[key] = result.get(key)
     return out
+
+
+def _compact_transcript_json_rows(rows: list[dict]) -> list[dict]:
+    compacted: list[dict] = []
+    for row in rows:
+        trimmed = dict(row)
+        trimmed.pop("raw_html", None)
+        trimmed.pop("transcript_text", None)
+        compacted.append(trimmed)
+    return compacted
 
 
 if __name__ == "__main__":

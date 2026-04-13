@@ -146,6 +146,8 @@ load_json_schema = getattr(_COMMON_MODULE, "load_json_schema")
 _COMMON_PACK_RUN_STATUS_VIEW = getattr(_COMMON_MODULE, "pack_run_status_view")
 _COMMON_PACK_EVENTS_VIEW = getattr(_COMMON_MODULE, "pack_events_view")
 parse_json_input_payload = getattr(_COMMON_MODULE, "parse_json_input_payload")
+_LOCAL_PACK_RUN_STATUS_VIEW = getattr(_LOCAL_MODULE, "pack_run_status_view")
+_LOCAL_PACK_EVENTS_VIEW = getattr(_LOCAL_MODULE, "pack_events_view")
 
 # Compatibility value lists used by local wrappers.
 AUGMENTATION_TYPES = getattr(_LOCAL_MODULE, "AUGMENTATION_TYPES")
@@ -236,8 +238,19 @@ def validate_artifact_submission_envelope(
     )
 
 
+def _call_packer_with_compat(func: Any, kwargs: dict[str, Any]) -> dict[str, Any]:
+    params = inspect.signature(func).parameters
+    if any(param.kind == inspect.Parameter.VAR_KEYWORD for param in params.values()):
+        return func(**kwargs)
+    allowed = {key: value for key, value in kwargs.items() if key in params}
+    return func(**allowed)
+
+
 def pack_run_status_view(**kwargs: Any) -> dict[str, Any]:
-    payload = dict(_COMMON_PACK_RUN_STATUS_VIEW(**kwargs))
+    try:
+        payload = dict(_call_packer_with_compat(_COMMON_PACK_RUN_STATUS_VIEW, kwargs))
+    except TypeError:
+        payload = dict(_call_packer_with_compat(_LOCAL_PACK_RUN_STATUS_VIEW, kwargs))
     if "found" not in payload:
         payload["found"] = True
     for key in (
@@ -263,7 +276,10 @@ def pack_run_status_view(**kwargs: Any) -> dict[str, Any]:
 
 
 def pack_events_view(**kwargs: Any) -> dict[str, Any]:
-    payload = dict(_COMMON_PACK_EVENTS_VIEW(**kwargs))
+    try:
+        payload = dict(_call_packer_with_compat(_COMMON_PACK_EVENTS_VIEW, kwargs))
+    except TypeError:
+        payload = dict(_call_packer_with_compat(_LOCAL_PACK_EVENTS_VIEW, kwargs))
     records = kwargs.get("records")
     if "record_count" not in payload:
         payload["record_count"] = len(records) if isinstance(records, list) else 0
